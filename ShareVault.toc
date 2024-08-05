@@ -1,0 +1,10 @@
+## Interface: 100002
+## Author: Papwnee-Frostmourne
+## Title: ShareVault
+## Version: v1.0.0
+## Notes: |cff36e5ffShare your vault.|r
+
+embeds.xml
+ShareVault.xml
+## ../Blizzard_WeeklyRewards/Blizzard_WeeklyRewards.xml
+transmit.lua
