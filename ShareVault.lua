@@ -4,46 +4,37 @@ local TEST_TABLE = {
 		-- MYTHICPLUS
 		-- 3rd Slot
 		[1]={
-			itemId=221163,
-			ilvl=500
+			itemId="0x40000009699B0ACF",
 		},
 		[2]={
-			itemId=221163,
-			ilvl=400
+			itemId="0x40000009699B0ACF",
 		},
 		[3]={
-			itemId=221163,
-			ilvl=300
+			itemId="0x40000009699B0ACF",
 		},
 		-- WORLD
 		-- 3rd Slot
 		[4]={
-			itemId=221163,
-			ilvl=500
+			itemId="0x40000009699B0ACF",
 		},
 		[5]={
-			itemId=221163,
-			ilvl=400
+			itemId="0x40000009699B0ACF",
 		},
 		[6]={
-			itemId=221163,
-			ilvl=300
+			itemId="0x40000009699B0ACF",
 		},
 		-- RAID
 		-- 3rd Slot
 		[7]={
-			itemId=221163,
-			ilvl=500
+			itemId="0x40000009699B0ACF",
 		},
 		-- 2nd Slot
 		[8]={
-			itemId=221163,
-			ilvl=400
+			itemId="0x40000009699B0ACF",
 		},
 		-- 1st Slot
 		[9]={
-			itemId=221163,
-			ilvl=300
+			itemId="0x40000009699B0ACF",
 		}
 	}
 }
@@ -1059,24 +1050,24 @@ function ShareVaultActivityItemMixin:OnClick()
 end
 
 function ShareVaultActivityItemMixin:SetDisplayedItem()
-	self.displayedItemDBID = nil;
-	self.itemLink = nil;
+	self.displayedItemDBID = self:GetParent().info.itemId;
+	self.itemLink = WeeklyRewards.GetItemHyperlink(self.displayedItemDBID);
 	local bestItemQuality = 0;
 	local bestItemLevel = 0;
 	-- for i, rewardInfo in ipairs(self:GetParent().info.rewards) do
 		-- if rewardInfo.type == Enum.CachedRewardType.Item and not C_Item.IsItemKeystoneByID(rewardInfo.id) then
-			local itemName, itemLink, itemQuality, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount, itemEquipLoc, itemIcon = C_Item.GetItemInfo(self:GetParent().info.itemId);
+			local itemName, itemLink, itemQuality, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount, itemEquipLoc, itemIcon = C_Item.GetItemInfo(self.itemLink);
 			-- want highest item level of highest quality
 			-- this comparison is not really needed now since the rewards are 1 equippable and 1 non-equippable item
 			if itemQuality > bestItemQuality or (itemQuality == bestItemQuality and itemLevel > bestItemLevel) then
 				bestItemQuality = itemQuality;
 				bestItemLevel = itemLevel;
 				-- self.displayedItemDBID = rewardInfo.itemDBID;
-				self.itemLink = itemLink;
+				-- self.itemLink = itemLink;
 				self.Name:SetText(itemName);
 				self.Icon:SetTexture(itemIcon);
 				-- SetItemButtonOverlay(self, C_WeeklyRewards.GetItemHyperlink(rewardInfo.itemDBID));
-				SetItemButtonOverlay(self, itemLink);
+				SetItemButtonOverlay(self, self.itemLink);
 			end
 		-- end
 	-- end
