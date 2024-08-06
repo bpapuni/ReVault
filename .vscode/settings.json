@@ -87,6 +87,7 @@
         "WeeklyRewardsUtil",
         "RED_FONT_COLOR",
         "GREAT_VAULT_REWARDS_CURRENT_LEVEL_HEROIC",
-        "GREAT_VAULT_REWARDS_CURRENT_LEVEL_MYTHIC"
+        "GREAT_VAULT_REWARDS_CURRENT_LEVEL_MYTHIC",
+        "ItemUtil"
     ]
 }

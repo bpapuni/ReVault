@@ -1,3 +1,53 @@
+local TEST_TABLE = {
+	Owner = "Papdh-Frostmourne",
+	Rewards = {
+		-- MYTHICPLUS
+		-- 3rd Slot
+		[1]={
+			itemId=221163,
+			ilvl=500
+		},
+		[2]={
+			itemId=221163,
+			ilvl=400
+		},
+		[3]={
+			itemId=221163,
+			ilvl=300
+		},
+		-- WORLD
+		-- 3rd Slot
+		[4]={
+			itemId=221163,
+			ilvl=500
+		},
+		[5]={
+			itemId=221163,
+			ilvl=400
+		},
+		[6]={
+			itemId=221163,
+			ilvl=300
+		},
+		-- RAID
+		-- 3rd Slot
+		[7]={
+			itemId=221163,
+			ilvl=500
+		},
+		-- 2nd Slot
+		[8]={
+			itemId=221163,
+			ilvl=400
+		},
+		-- 1st Slot
+		[9]={
+			itemId=221163,
+			ilvl=300
+		}
+	}
+}
+
 local TEST_TABLE_2 = {
 	Owner = "Papdh-Frostmourne",
 	Rewards = {
@@ -18,7 +68,7 @@ local TEST_TABLE_2 = {
 			progress=7,
 			rewards={
 				{
-					id=189862,
+					id=221163,
 					type=Enum.WeeklyRewardChestThresholdType.MythicPlus
 				}
 			},
@@ -33,7 +83,7 @@ local TEST_TABLE_2 = {
 			progress=7,
 			rewards={
 				{
-					id=189863,
+					id=221163,
 					type=Enum.WeeklyRewardChestThresholdType.MythicPlus
 				}
 			},
@@ -48,7 +98,7 @@ local TEST_TABLE_2 = {
 			progress=5500,
 			rewards={
 				{
-					id=189862,
+					id=221163,
 					type=Enum.WeeklyRewardChestThresholdType.World				
 				}
 			},
@@ -63,7 +113,7 @@ local TEST_TABLE_2 = {
 			progress=5500,
 			rewards={
 				{
-					id=189862,
+					id=221163,
 					type=Enum.WeeklyRewardChestThresholdType.World	
 				}
 			},
@@ -78,7 +128,7 @@ local TEST_TABLE_2 = {
 			progress=5500,
 			rewards={
 				{
-					id=189862,
+					id=221163,
 					type=Enum.WeeklyRewardChestThresholdType.World	
 				}
 			},
@@ -90,45 +140,45 @@ local TEST_TABLE_2 = {
 		[7]={
 			type=3,
 			index=1,
-			progress=11,
+			progress=8,
 			rewards={
 				{
-					id=189862,
+					id=221163,
 					type=Enum.WeeklyRewardChestThresholdType.Raid
 				}
 			},
-			threshold=8,
-			level=15,
+			threshold=2,
+			level=0,
 			raidString="Defeat....",
 			id=84 
 		},
 		[8]={
 			type=3,
 			index=2,
-			progress=11,
+			progress=8,
 			rewards={
 				{
-					id=189862,
+					id=221163,
 					type=Enum.WeeklyRewardChestThresholdType.Raid
 				}
 			},
-			threshold=8,
-			level=15,
+			threshold=4,
+			level=0,
 			raidString="Defeat....",
 			id=85 
 		},
 		[9]={
 			type=3,
 			index=3,
-			progress=11,
+			progress=8,
 			rewards={
 				{
-					id=189862,
+					id=221163,
 					type=Enum.WeeklyRewardChestThresholdType.Raid
 				}
 			},
-			threshold=8,
-			level=15,
+			threshold=6,
+			level=0,
 			raidString="Defeat....",
 			id=86 
 		}
@@ -190,21 +240,22 @@ ShareVaultMixin = { };
 function ShareVaultMixin:SetUpConditionalActivities()
 	self.showWorldRow = false;
 	-- local activities = C_WeeklyRewards.GetActivities();
-	local activities = TEST_TABLE_2.Rewards;
+	-- local activities = TEST_TABLE_2.Rewards;
+	local activities = TEST_TABLE.Rewards;
 	for i, activityInfo in ipairs(activities) do
-		activityInfo.progress = 0;
-		if activityInfo.type == Enum.WeeklyRewardChestThresholdType.World then
+		-- activityInfo.progress = 0;
+		-- if activityInfo.type == Enum.WeeklyRewardChestThresholdType.World then
 			self.showWorldRow = true;
-			break;
-		end
+			-- break;
+		-- end
 	end
 
-	self.showPVPRow = not self.showWorldRow;
+	-- self.showPVPRow = not self.showWorldRow;
 
-	self:SetActivityShown(self.showPVPRow, self.PVPFrame, Enum.WeeklyRewardChestThresholdType.RankedPvP);
-	if self.showPVPRow then
-		self:SetUpActivity(self.PVPFrame, PVP, "evergreen-weeklyrewards-category-pvp", Enum.WeeklyRewardChestThresholdType.RankedPvP);
-	end
+	-- self:SetActivityShown(self.showPVPRow, self.PVPFrame, Enum.WeeklyRewardChestThresholdType.RankedPvP);
+	-- if self.showPVPRow then
+	-- 	self:SetUpActivity(self.PVPFrame, PVP, "evergreen-weeklyrewards-category-pvp", Enum.WeeklyRewardChestThresholdType.RankedPvP);
+	-- end
 
 	self:SetActivityShown(self.showWorldRow, self.WorldFrame, Enum.WeeklyRewardChestThresholdType.World);
 	if self.showWorldRow then
@@ -316,6 +367,7 @@ end
 
 function ShareVaultMixin:GetActivityFrame(activityType, index)
 	for i, frame in ipairs(self.Activities) do
+		-- if frame.type == activityType and frame.index == index then
 		if frame.type == activityType and frame.index == index then
 			return frame;
 		end
@@ -349,12 +401,21 @@ function ShareVaultMixin:Refresh(playSheenAnims)
 	-- always hide concession, if there are rewards the refresh will show it
 	self.ConcessionFrame:Hide();
 
-	-- local activities = C_WeeklyRewards.GetActivities();
-	local activities = TEST_TABLE_2.Rewards;
+	local weeklyRewardsActivities = C_WeeklyRewards.GetActivities();
+	-- local activities = TEST_TABLE_2.Rewards;
+	local activities = TEST_TABLE.Rewards;
 	for i, activityInfo in ipairs(activities) do
+		local activityType = { 1, 6, 3 };
+		local activityTypeIndex = math.floor((i - 1) / 3) + 1;
+		
+		activityInfo.type = activityType[activityTypeIndex];
+		activityInfo.index = ((i - 1) % 3) + 1;
+		activityInfo.threshold = weeklyRewardsActivities[i].threshold
+		
+		
 		local frame = self:GetActivityFrame(activityInfo.type, activityInfo.index);
 		if frame then
-			activityInfo.progress = 0;
+			-- activityInfo.progress = 0;
 		-- 	-- hide current progress for current week if rewards are present
 		-- 	if canClaimRewards and #activityInfo.rewards == 0 then
 		-- 		activityInfo.progress = 0;
@@ -362,6 +423,7 @@ function ShareVaultMixin:Refresh(playSheenAnims)
 		-- 	if playSheenAnims then
 		-- 		frame:MarkForPendingSheenAnim();
 		-- 	end
+
 			frame:Refresh(activityInfo);
 		end
 	end
@@ -395,7 +457,7 @@ function ShareVaultMixin:UpdateOverlay()
 	-- if self:ShouldShowOverlay() then
 		-- self:GetOrCreateOverlay():Show();
 	-- elseif self.Overlay then
-		self.Overlay:Hide();
+		-- self.Overlay:Hide();
 	-- end
 
 	self.Blackout:SetShown(show);
@@ -563,10 +625,11 @@ function ShareVaultActivityMixin:Refresh(activityInfo)
 	local thresholdString;
 	if activityInfo.type == Enum.WeeklyRewardChestThresholdType.Raid then
 		-- if activityInfo.raidString then
-			-- thresholdString = activityInfo.raidString;
+		-- 	thresholdString = C_WeeklyRewards.GetActivities()[9].raidString;
 		-- else
-			thresholdString = WEEKLY_REWARDS_THRESHOLD_RAID;
+		-- 	thresholdString = WEEKLY_REWARDS_THRESHOLD_RAID;
 		-- end
+		thresholdString = C_WeeklyRewards.GetActivities()[9].raidString;
 	elseif activityInfo.type == Enum.WeeklyRewardChestThresholdType.Activities then
 		thresholdString = WEEKLY_REWARDS_THRESHOLD_DUNGEONS;
 	elseif activityInfo.type == Enum.WeeklyRewardChestThresholdType.RankedPvP then
@@ -574,11 +637,11 @@ function ShareVaultActivityMixin:Refresh(activityInfo)
 	elseif activityInfo.type == Enum.WeeklyRewardChestThresholdType.World then
 		thresholdString = WEEKLY_REWARDS_THRESHOLD_WORLD;
 	end
-	-- TODO replace activityInfo.threshold with C_WeeklyRewards.GetActivities -> Thresholds
-	self.Threshold:SetFormattedText(thresholdString, activityInfo.threshold);
 
-	self.unlocked = activityInfo.progress >= activityInfo.threshold;
-	self.hasRewards = #activityInfo.rewards > 0;
+	self.Threshold:SetFormattedText(thresholdString, activityInfo.threshold);
+	-- self.unlocked = activityInfo.progress >= activityInfo.threshold;
+	self.unlocked = activityInfo.itemId ~= nil
+	self.hasRewards = activityInfo.itemId ~= nil
 	self.info = activityInfo;
 
 	-- self:SetProgressText();
@@ -596,7 +659,7 @@ function ShareVaultActivityMixin:Refresh(activityInfo)
 		self.CompletedActivityAnim:Play();
 		self.ItemFrame:Hide();
 		if self.hasRewards then
-			self.ItemFrame:SetRewards(activityInfo.rewards);
+			self.ItemFrame:SetRewards(activityInfo.itemId);
 			self.ItemGlow:Show();
 			self.UncollectedGlow:Hide();
 			self:ClearActiveEffect();
@@ -763,11 +826,13 @@ function ShareVaultActivityMixin:ShowIncompleteTooltip(title, description, forma
 end
 
 function ShareVaultActivityMixin:ShowPreviewItemTooltip()
+	DevTools_Dump(select(2, C_Item.GetItemInfo(self.info.itemId)))
 	GameTooltip:SetOwner(self, "ANCHOR_RIGHT", -7, -11);
 	GameTooltip_SetTitle(GameTooltip, WEEKLY_REWARDS_CURRENT_REWARD);
-	local itemLink, upgradeItemLink = C_WeeklyRewards.GetExampleRewardItemHyperlinks(self.info.id);
+	local itemName, itemLink = C_Item.GetItemInfo(self.info.itemId);
 	local itemLevel, upgradeItemLevel;
 	if itemLink then
+		-- TODO get tooltip displaying on thise mouseover
 		itemLevel = C_Item.GetDetailedItemLevelInfo(itemLink);
 	end
 	if upgradeItemLink then
@@ -966,7 +1031,8 @@ ShareVaultActivityItemMixin = { };
 
 function ShareVaultActivityItemMixin:OnEnter()
 	GameTooltip:SetOwner(self, "ANCHOR_RIGHT", -3, -6);
-	GameTooltip:SetWeeklyReward(self.displayedItemDBID);
+	-- GameTooltip:SetWeeklyReward(self.displayedItemDBID);
+	GameTooltip:SetHyperlink(self.itemLink);
 	self:SetScript("OnUpdate", self.OnUpdate);
 end
 
@@ -986,8 +1052,7 @@ end
 function ShareVaultActivityItemMixin:OnClick()
 	local activityFrame = self:GetParent();
 	if IsModifiedClick() then
-		local hyperlink = C_WeeklyRewards.GetItemHyperlink(self.displayedItemDBID);
-		HandleModifiedItemClick(hyperlink);
+		HandleModifiedItemClick(self.itemLink);
 	-- else
 	-- 	activityFrame:GetParent():SelectActivity(activityFrame);
 	end
@@ -995,134 +1060,139 @@ end
 
 function ShareVaultActivityItemMixin:SetDisplayedItem()
 	self.displayedItemDBID = nil;
+	self.itemLink = nil;
 	local bestItemQuality = 0;
 	local bestItemLevel = 0;
-	for i, rewardInfo in ipairs(self:GetParent().info.rewards) do
-		if rewardInfo.type == Enum.CachedRewardType.Item and not C_Item.IsItemKeystoneByID(rewardInfo.id) then
-			local itemName, itemLink, itemQuality, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount, itemEquipLoc, itemIcon = C_Item.GetItemInfo(rewardInfo.id);
+	-- for i, rewardInfo in ipairs(self:GetParent().info.rewards) do
+		-- if rewardInfo.type == Enum.CachedRewardType.Item and not C_Item.IsItemKeystoneByID(rewardInfo.id) then
+			local itemName, itemLink, itemQuality, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount, itemEquipLoc, itemIcon = C_Item.GetItemInfo(self:GetParent().info.itemId);
 			-- want highest item level of highest quality
 			-- this comparison is not really needed now since the rewards are 1 equippable and 1 non-equippable item
 			if itemQuality > bestItemQuality or (itemQuality == bestItemQuality and itemLevel > bestItemLevel) then
 				bestItemQuality = itemQuality;
 				bestItemLevel = itemLevel;
-				self.displayedItemDBID = rewardInfo.itemDBID;
+				-- self.displayedItemDBID = rewardInfo.itemDBID;
+				self.itemLink = itemLink;
 				self.Name:SetText(itemName);
 				self.Icon:SetTexture(itemIcon);
-				SetItemButtonOverlay(self, C_WeeklyRewards.GetItemHyperlink(rewardInfo.itemDBID));
+				-- SetItemButtonOverlay(self, C_WeeklyRewards.GetItemHyperlink(rewardInfo.itemDBID));
+				SetItemButtonOverlay(self, itemLink);
 			end
-		end
-	end
-	if self.displayedItemDBID then
-		local hyperlink = C_WeeklyRewards.GetItemHyperlink(self.displayedItemDBID);
-		if hyperlink then
-			local itemLevel = C_Item.GetDetailedItemLevelInfo(hyperlink);
+		-- end
+	-- end
+
+	if self.itemLink then
+		-- local hyperlink = C_WeeklyRewards.GetItemHyperlink(self.displayedItemDBID);
+		-- if hyperlink then
+			local itemLevel = C_Item.GetDetailedItemLevelInfo(self.itemLink);
 			local progressText = string.format(ITEM_LEVEL, itemLevel);
 			self:GetParent():SetProgressText(progressText);
-		end
+		-- end
 	end
-	self:SetShown(self.displayedItemDBID ~= nil);
+	self:SetShown(true);
 end
 
-function ShareVaultActivityItemMixin:SetRewards(rewards)
+function ShareVaultActivityItemMixin:SetRewards(rewardId)
 	local continuableContainer = ContinuableContainer:Create();
-	for i, rewardInfo in ipairs(rewards) do
-		if rewardInfo.type == Enum.CachedRewardType.Item then
-			local item = Item:CreateFromItemID(rewardInfo.id);
-			continuableContainer:AddContinuable(item);
-		end
-	end
-
+	-- for i, rewardInfo in ipairs(rewards) do
+		-- if rewardInfo.type == Enum.CachedRewardType.Item then
+		local item = Item:CreateFromItemID(rewardId);
+		continuableContainer:AddContinuable(item);
+		-- end
+	-- end
+		
 	continuableContainer:ContinueOnLoad(function()
 		self:SetDisplayedItem();
 	end);
 end
 
--- ShareVaultConcessionMixin = { };
+ShareVaultConcessionMixin = { };
 
--- function ShareVaultConcessionMixin:SetSelectionState(state)
--- 	if state == SELECTION_STATE_SELECTED then
--- 		self.SelectedTexture:Show();
--- 		self.UnselectedFrame:Hide();
--- 	elseif state == SELECTION_STATE_UNSELECTED then
--- 		self.SelectedTexture:Hide();
--- 		self.UnselectedFrame:Show();
--- 	else
--- 		self.SelectedTexture:Hide();
--- 		self.UnselectedFrame:Hide();
--- 	end
--- end
+function ShareVaultConcessionMixin:SetSelectionState(state)
+	if state == SELECTION_STATE_SELECTED then
+		self.SelectedTexture:Show();
+		self.UnselectedFrame:Hide();
+	elseif state == SELECTION_STATE_UNSELECTED then
+		self.SelectedTexture:Hide();
+		self.UnselectedFrame:Show();
+	else
+		self.SelectedTexture:Hide();
+		self.UnselectedFrame:Hide();
+	end
+end
 
--- function ShareVaultConcessionMixin:MarkForPendingSheenAnim()
--- 	-- nothing?
--- end
+function ShareVaultConcessionMixin:MarkForPendingSheenAnim()
+	-- nothing?
+end
 
--- function ShareVaultConcessionMixin:Refresh(activityInfo)
--- 	self.info = nil;
+function ShareVaultConcessionMixin:Refresh(activityInfo)
+	-- self.info = nil;
 
--- 	local comparison = function(entry1, entry2)
--- 		if ( entry1.type ~= entry2.type ) then
--- 			return entry1.type == Enum.CachedRewardType.Item;
--- 		else
--- 			return entry1.quantity > entry2.quantity;
--- 		end
--- 	end
--- 	table.sort(activityInfo.rewards, comparison);
+	-- local comparison = function(entry1, entry2)
+	-- 	if ( entry1.type ~= entry2.type ) then
+	-- 		return entry1.type == Enum.CachedRewardType.Item;
+	-- 	else
+	-- 		return entry1.quantity > entry2.quantity;
+	-- 	end
+	-- end
+	-- table.sort(activityInfo.rewards, comparison);
 
--- 	local rewardIndex;
--- 	for i, rewardInfo in ipairs(activityInfo.rewards) do
--- 		-- no mythic keystone items
--- 		local icon;
--- 		if rewardInfo.type == Enum.CachedRewardType.Item and not C_Item.IsItemKeystoneByID(rewardInfo.id) then
--- 			icon = select(5, C_Item.GetItemInfoInstant(rewardInfo.id));
--- 		elseif rewardInfo.type == Enum.CachedRewardType.Currency then
--- 			local currencyInfo = C_CurrencyInfo.GetCurrencyInfo(rewardInfo.id);
--- 			icon = currencyInfo and currencyInfo.iconFileID;
--- 		end
+	-- local rewardIndex;
+	-- for i, rewardInfo in ipairs(activityInfo.rewards) do
+	-- 	-- no mythic keystone items
+	-- 	local icon;
+	-- 	if rewardInfo.type == Enum.CachedRewardType.Item and not C_Item.IsItemKeystoneByID(rewardInfo.id) then
+	-- 		icon = select(5, C_Item.GetItemInfoInstant(rewardInfo.id));
+	-- 	elseif rewardInfo.type == Enum.CachedRewardType.Currency then
+	-- 		local currencyInfo = C_CurrencyInfo.GetCurrencyInfo(rewardInfo.id);
+	-- 		icon = currencyInfo and currencyInfo.iconFileID;
+	-- 	end
 
--- 		if icon then
--- 			self.RewardsFrame.Text:SetText(string.format(WEEKLY_REWARDS_CONCESSION_FORMAT, icon, rewardInfo.quantity));
--- 			self.RewardsFrame:Layout();
--- 			self.info = activityInfo;
--- 			self.displayedRewardIndex = i;
--- 			self:Show();
--- 			break;
--- 		end
--- 	end
--- end
+	-- 	if icon then
+	-- 		self.RewardsFrame.Text:SetText(string.format(WEEKLY_REWARDS_CONCESSION_FORMAT, icon, rewardInfo.quantity));
+	-- 		self.RewardsFrame:Layout();
+	-- 		self.info = activityInfo;
+	-- 		self.displayedRewardIndex = i;
+	-- 		self:Show();
+	-- 		break;
+	-- 	end
+	-- end
+end
 
--- function ShareVaultConcessionMixin:OnEnter()
--- 	self:SetScript("OnUpdate", self.OnUpdate);
--- end
+function ShareVaultConcessionMixin:OnEnter()
+	self:SetScript("OnUpdate", self.OnUpdate);
+end
 
--- function ShareVaultConcessionMixin:OnLeave()
--- 	self:SetScript("OnUpdate", nil);
--- 	GameTooltip:Hide();
--- end
+function ShareVaultConcessionMixin:OnLeave()
+	self:SetScript("OnUpdate", nil);
+	GameTooltip:Hide();
+end
 
--- function ShareVaultConcessionMixin:OnUpdate()
--- 	if self.info and GameTooltip:GetOwner() ~= self and self.RewardsFrame:IsMouseOver() then
--- 		GameTooltip:SetOwner(self.RewardsFrame, "ANCHOR_RIGHT");
--- 		local rewardInfo = self.info.rewards[self.displayedRewardIndex];
--- 		if rewardInfo.type == Enum.CachedRewardType.Item then
--- 			local itemHyperlink = C_WeeklyRewards.GetItemHyperlink(rewardInfo.itemDBID);
--- 			GameTooltip:SetHyperlink(itemHyperlink);
--- 		elseif rewardInfo.type == Enum.CachedRewardType.Currency then
--- 			GameTooltip:SetCurrencyByID(rewardInfo.id);
--- 		end
--- 	end
--- end
+function ShareVaultConcessionMixin:OnUpdate()
+	if self.info and GameTooltip:GetOwner() ~= self and self.RewardsFrame:IsMouseOver() then
+		GameTooltip:SetOwner(self.RewardsFrame, "ANCHOR_RIGHT");
+		local rewardInfo = self.info.rewards[self.displayedRewardIndex];
+		-- if rewardInfo.type == Enum.CachedRewardType.Item then
+			local itemHyperlink = C_WeeklyRewards.GetItemHyperlink(rewardInfo.itemDBID);
+			local itemName, itemLink = C_Item.GetItemInfo(itemHyperlink);
+			GameTooltip:SetHyperlink(itemLink);
+		-- elseif rewardInfo.type == Enum.CachedRewardType.Currency then
+			-- GameTooltip:SetCurrencyByID(rewardInfo.id);
+		-- end
+	end
+end
 
--- function ShareVaultConcessionMixin:OnMouseDown()
--- 	self:GetParent():SelectActivity(self);
--- end
+function ShareVaultConcessionMixin:OnMouseDown()
+	self:GetParent():SelectActivity(self);
+end
 
--- function ShareVaultConcessionMixin:GetDisplayedItemDBID()
--- 	local rewardInfo = self.info.rewards[self.displayedRewardIndex];
--- 	if rewardInfo.type == Enum.CachedRewardType.Item then
--- 		return rewardInfo.itemDBID;
--- 	end
--- 	return nil;
--- end
+function ShareVaultConcessionMixin:GetDisplayedItemDBID()
+	local rewardInfo = self.info.rewards[self.displayedRewardIndex];
+	if rewardInfo.type == Enum.CachedRewardType.Item then
+		return rewardInfo.itemDBID;
+	end
+	return nil;
+end
 
 -- ShareVaultConfirmSelectionMixin = { }
 
