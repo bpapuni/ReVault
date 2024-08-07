@@ -71,11 +71,25 @@ end
 
 function ShareVaultMixin:OnShow()
 	PlaySound(SOUNDKIT.UI_WEEKLY_REWARD_OPEN_WINDOW);
-	self:FullRefresh();
+	local checkCount = 0;
+	local checkForData;
+	checkForData = C_Timer.NewTicker(1, function()
+		if self.activities then
+			self:FullRefresh();
+			checkForData:Cancel()
+		else
+			checkCount = checkCount + 1;
+			if (checkCount == 3) then
+				self.activities = ShareVaultData[self.owner]
+				self:FullRefresh();
+			end
+		end
+	end, 3)
 end
 
 function ShareVaultMixin:OnHide()
 	PlaySound(SOUNDKIT.UI_WEEKLY_REWARD_CLOSE_WINDOW);
+	self.activities = nil;
 	self.selectedActivity = nil;
 end
 
@@ -130,9 +144,10 @@ function ShareVaultMixin:FullRefresh()
 end
 
 function ShareVaultMixin:Refresh(playSheenAnims)
-	local activities = self.activities
+	-- local activities = self.activities
+	local activities = self.activities or C_WeeklyRewards.GetActivities();
 
-	self.HeaderFrame.Text:SetText(self.activities.owner.."'s Vault");
+	self.HeaderFrame.Text:SetText(self.owner.."'s Vault");
 	self.Blackout:SetShown(false);	
 	self.ConcessionFrame:Hide();
 	self:UpdateSelection();
@@ -205,9 +220,15 @@ function ShareVaultActivityMixin:Refresh(activityInfo)
 	end
 
 	self.Threshold:SetFormattedText(thresholdString, activityInfo.threshold);
-	self.unlocked = activityInfo.progress >= activityInfo.threshold;
-	self.hasRewards = activityInfo.rewards.itemLink
-	self.info = activityInfo;
+	if (not self:GetParent().activities) then
+		self.unlocked = false;
+		self.hasRewards = false
+		self.info = activityInfo;
+	else
+		self.unlocked = activityInfo.progress >= activityInfo.threshold;
+		self.hasRewards = activityInfo.rewards.itemLink
+		self.info = activityInfo;
+	end
 
 	self:SetProgressText();
 
@@ -284,8 +305,9 @@ function ShareVaultActivityMixin:SetProgressText(text)
 	local activityInfo = self.info;
 	if text then
 		self.Progress:SetText(text);
-	-- else
+	else
 		-- self.Progress:SetFormattedText(GENERIC_FRACTION_STRING, activityInfo.progress, activityInfo.threshold);
+		self.Progress:SetText("");
 	end
 end
 

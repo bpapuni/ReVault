@@ -82,7 +82,7 @@ local function crossRealmSendCommMessage(prefix, text, target)
 			-- text = ("%s:%s"):format(target, text)
 		end
 	end
-	-- local success = C_ChatInfo.SendAddonMessage(prefix, "a", chattype, target)
+	-- local success = C_ChatInfo.SendAddonMessage("ShareVault", "a", "WHISPER", "Fiftyboost-Frostmourne")
 	-- print("Online: "..tostring(success));
 	Comm:SendCommMessage(prefix, text, chattype, target)
 end
@@ -125,7 +125,8 @@ Comm:RegisterComm("ShareVault", function(prefix, message, chattype, sender)
 			local success, deserialized = LibSerialize:Deserialize(decompressed)
 			
 			ShareVaultFrame.activities = deserialized;
-			ShareVaultFrame:Show();
+			ShareVaultData[deserialized.owner] = deserialized;
+			-- ShareVaultFrame:Show();
 		-- TODO Detect if no response
 		-- elseif request ~= nil and response == nil then
 		-- 	print(response)
@@ -147,7 +148,7 @@ Comm:RegisterComm("ShareVault", function(prefix, message, chattype, sender)
 
 			ShareVaultFrame.activities = deserialized;
 			ShareVaultData[deserialized.owner] = deserialized;
-			ShareVaultFrame:Show();
+			-- ShareVaultFrame:Show();
 		end
 	end
 end)
@@ -162,6 +163,9 @@ hooksecurefunc("SetItemRef", function(link, text)
 				editbox:Insert("[ShareVault: " .. characterName .. "'s Vault]");
 			end
 		else
+			ShareVaultFrame.owner = characterName;
+			ShareVaultFrame:Hide();
+			ShareVaultFrame:Show();
 			crossRealmSendCommMessage("ShareVault", characterName .. ":request", characterName)
 		end
 	end
