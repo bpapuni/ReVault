@@ -73,8 +73,10 @@ function ShareVaultMixin:OnShow()
 	PlaySound(SOUNDKIT.UI_WEEKLY_REWARD_OPEN_WINDOW);
 	local checkCount = 0;
 	local checkForData;
+	self.Blackout:SetShown(true);
 	checkForData = C_Timer.NewTicker(1, function()
 		if self.activities then
+			self.Blackout:SetShown(false);
 			self:FullRefresh();
 			checkForData:Cancel()
 		else
@@ -144,11 +146,9 @@ function ShareVaultMixin:FullRefresh()
 end
 
 function ShareVaultMixin:Refresh(playSheenAnims)
-	-- local activities = self.activities
 	local activities = self.activities or C_WeeklyRewards.GetActivities();
 
 	self.HeaderFrame.Text:SetText(self.owner.."'s Vault");
-	self.Blackout:SetShown(false);	
 	self.ConcessionFrame:Hide();
 	self:UpdateSelection();
 
@@ -171,6 +171,34 @@ function ShareVaultMixin:Refresh(playSheenAnims)
 	self:SetHeight(657);
 end
 
+function ShareVaultMixin:UpdateOverlay()
+	local show = self:ShouldShowOverlay();
+
+	if self:ShouldShowOverlay() then
+		self:GetOrCreateOverlay():Show();
+	elseif self.Overlay then
+		self.Overlay:Hide();
+	end
+
+	self.Blackout:SetShown(show);
+end
+
+function ShareVaultMixin:ShouldShowOverlay()
+	return self:IsReadOnly() and C_WeeklyRewards.HasAvailableRewards();
+end
+
+function ShareVaultMixin:GetOrCreateOverlay()
+	if self.Overlay then
+		return self.Overlay;
+	end
+
+	self.Overlay = CreateFrame("Frame", nil, self, "ShareVaultOverlayTemplate");
+	self.Overlay:SetPoint("TOP", self, "TOP", 0, -142);
+	RaiseFrameLevel(self.Overlay);
+
+	return self.Overlay;
+end
+
 function ShareVaultMixin:UpdateSelection()
     local selectedActivity = self.selectedActivity;
 
@@ -191,6 +219,22 @@ end
 
 function ShareVaultMixin:GetSelectedActivityInfo()
 	return self.selectedActivity and self.selectedActivity.info;
+end
+
+ShareVaultOverlayMixin = {};
+
+local EVERGREEN_WEEKLY_REWARD_OVERLAY_EFFECT = { effectID = 179, offsetX = 3, offsetY = 0 };
+
+function ShareVaultOverlayMixin:OnShow()
+	self.activeEffect = self.ModelScene:AddDynamicEffect(EVERGREEN_WEEKLY_REWARD_OVERLAY_EFFECT, self);
+	NineSliceUtil.ApplyLayoutByName(self.NineSlice, "Dialog");
+end
+
+function ShareVaultOverlayMixin:OnHide()
+	if self.activeEffect then
+		self.activeEffect:CancelEffect();
+		self.activeEffect = nil;
+	end
 end
 
 ShareVaultActivityMixin = { };

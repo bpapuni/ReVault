@@ -369,6 +369,54 @@
 
 	<Frame name="ShareVaultNineSliceTemplate" inherits="NineSlicePanelTemplate" setAllPoints="true" virtual="true"/>
 
+	<Frame name="ShareVaultOverlayTemplate" mixin="ShareVaultOverlayMixin" frameLevel="1250" virtual="true">
+		<Size x="500" y="278"/>
+		<Layers>
+			<Layer level="BACKGROUND">
+				<Texture parentKey="Background" atlas="evergreen-weeklyrewards-frame-back">
+					<Anchors>
+						<Anchor point="TOPLEFT" x="8" y="-8"/>
+						<Anchor point="BOTTOMRIGHT" x="-8" y="8"/>
+					</Anchors>
+				</Texture>
+			</Layer>
+			<Layer level="ARTWORK">
+				<FontString parentKey="Title" inherits="SystemFont_Large" justifyH="CENTER" text="WEEKLY_REWARDS_UNCLAIMED_TITLE">
+					<Anchors>
+						<Anchor point="TOP" x="0" y="-46"/>
+					</Anchors>
+					<Color color="GREEN_FONT_COLOR"/>
+				</FontString>
+				<FontString parentKey="Text" inherits="GameFontNormalMed3" justifyH="CENTER" text="WEEKLY_REWARDS_UNCLAIMED_TEXT">
+					<Size x="370" y="0"/>
+					<Anchors>
+						<Anchor point="TOP" relativePoint="BOTTOM" x="0" y="78"/>
+					</Anchors>
+					<Color color="HIGHLIGHT_FONT_COLOR"/>
+				</FontString>
+			</Layer>
+		</Layers>
+		<Frames>
+			<Frame parentKey="NineSlice" inherits="ShareVaultNineSliceTemplate" frameLevel="2000"/>
+			<ModelScene parentKey="ModelScene" inherits="ScriptAnimatedModelSceneTemplate" setAllPoints="true" drawLayer="BACKGROUND" frameLevel="1500"/>
+			<Frame setAllPoints="true">
+				<Layers>
+					<Layer level="ARTWORK">
+						<Texture parentKey="Orb" useAtlasSize="true">
+							<Anchors>
+								<Anchor point="CENTER" x="0" y="6"/>
+							</Anchors>
+						</Texture>
+					</Layer>
+				</Layers>
+			</Frame>
+		</Frames>
+		<Scripts>
+			<OnShow method="OnShow"/>
+			<OnHide method="OnHide"/>
+		</Scripts>
+	</Frame>
+
 	<Frame name="ShareVaultFrame" mixin="ShareVaultMixin" parent="UIParent" hidden="true" enableMouse="true" toplevel="true" frameLevel="100">
 		<Size x="1165" y="657"/>
 		<Anchors>
@@ -490,91 +538,6 @@
 			</Frame>
 			<ModelScene parentKey="ModelScene" inherits="ScriptAnimatedModelSceneTemplate" setAllPoints="true" drawLayer="BACKGROUND" frameLevel="300"/>
 			<Frame parentKey="ConcessionFrame" parentArray="Activities" mixin="ShareVaultConcessionMixin">
-				<!-- <Size x="440" y="45"/>
-				<KeyValues>
-					<KeyValue key="type" value="Enum.ShareVaultChestThresholdType.Concession" type="global"/>
-					<KeyValue key="index" value="1" type="number"/>
-					<KeyValue key="hasRewards" value="true" type="boolean"/>
-				</KeyValues>
-				<Anchors>
-					<Anchor point="BOTTOM" x="0" y="63"/>
-				</Anchors>
-				<Layers>
-					<Layer level="BACKGROUND">
-						<Texture parentKey="Background" atlas="evergreen-weeklyrewards-reward-coin" useAtlasSize="true">
-							<Anchors>
-								<Anchor point="CENTER" relativePoint="CENTER" x="0" y="0"/>
-							</Anchors>
-						</Texture>
-					</Layer>
-					<Layer level="BORDER">
-						<Texture parentKey="Divider1" useAtlasSize="true">
-							<Anchors>
-								<Anchor point="BOTTOMRIGHT" relativePoint="TOP" x="-18" y="11"/>
-							</Anchors>
-						</Texture>
-						<Texture parentKey="Divider2" useAtlasSize="true">
-							<Anchors>
-								<Anchor point="BOTTOMLEFT" relativePoint="TOP" x="18" y="11"/>
-							</Anchors>
-							<TexCoords left="1" right="0" top="0" bottom="1"/>
-						</Texture>
-					</Layer>
-					<Layer level="ARTWORK">
-						<FontString inherits="SystemFont_Shadow_Large2" text="WEEKLY_REWARDS_OR">
-							<Anchors>
-								<Anchor point="BOTTOM" relativePoint="TOP" x="0" y="5"/>
-							</Anchors>
-							<Color color="NORMAL_FONT_COLOR"/>
-						</FontString>
-					</Layer>
-					<Layer level="OVERLAY">
-						<Texture parentKey="SelectedTexture" atlas="evergreen-weeklyrewards-reward-coin-selected" useAtlasSize="true">
-							<Anchors>
-								<Anchor point="CENTER" relativePoint="CENTER" relativeKey="$parent.Background" x="0" y="0"/>
-							</Anchors>
-						</Texture>
-					</Layer>
-				</Layers>
-				<Frames>
-					<Frame parentKey="RewardsFrame" inherits="HorizontalLayoutFrame" frameLevel="1000">
-						<KeyValues>
-							<KeyValue key="fixedHeight" value="24" type="number"/>
-							<KeyValue key="spacing" value="4" type="number"/>
-							<KeyValue key="expand" value="true" type="boolean"/>
-						</KeyValues>
-						<Anchors>
-							<Anchor point="CENTER"/>
-						</Anchors>
-						<Layers>
-							<Layer level="ARTWORK">
-								<FontString parentKey="Label" inherits="GameFontNormal" text="WEEKLY_REWARDS_GET_CONCESSION">
-									<Size y="24"/>
-									<KeyValues>
-										<KeyValue key="layoutIndex" value="1" type="number"/>
-									</KeyValues>
-								</FontString>
-								<FontString parentKey="Text" inherits="GameFontHighlight">
-									<Size y="24"/>
-									<KeyValues>
-										<KeyValue key="layoutIndex" value="2" type="number"/>
-									</KeyValues>
-								</FontString>
-							</Layer>
-						</Layers>
-					</Frame>
-					<Frame parentKey="UnselectedFrame" setAllPoints="true" frameLevel="1100">
-						<Layers>
-							<Layer level="OVERLAY">
-								<Texture atlas="evergreen-weeklyrewards-reward-coin-unselected" useAtlasSize="true">
-									<Anchors>
-										<Anchor point="CENTER"/>
-									</Anchors>
-								</Texture>
-							</Layer>
-						</Layers>
-					</Frame>
-				</Frames> -->
 			</Frame>
 			<Button parentKey="CloseButton" inherits="UIPanelCloseButton" frameLevel="6000">
 				<Anchors>
