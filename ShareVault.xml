@@ -367,131 +367,7 @@
 		</Scripts>
 	</Frame>
 
-	<!-- <Frame name="ShareVaultAlsoItemTemplate" virtual="true">
-		<Size x="24" y="24"/>
-		<Layers>
-			<Layer level="ARTWORK">
-				<Texture parentKey="Icon" setAllPoints="true"/>
-			</Layer>
-			<Layer level="OVERLAY">
-				<Texture parentKey="IconBorder" setAllPoints="true" file="Interface\Common\WhiteIconFrame"/>
-			</Layer>
-		</Layers>
-		<Scripts>
-			<OnEnter>
-				GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
-				GameTooltip:SetHyperlink(self.itemHyperlink);
-			</OnEnter>
-			<OnLeave>
-				GameTooltip:Hide();
-			</OnLeave>
-		</Scripts>
-	</Frame> -->
-
-	<!-- <Frame name="ShareVaultConfirmSelectionTemplate" mixin="ShareVaultConfirmSelectionMixin" virtual="true">
-		<Size x="200" y="98"/>
-		<Frames>
-			<Frame parentKey="CurrencyFrame" inherits="CurrencyHorizontalLayoutFrameTemplate">
-				<KeyValues>
-					<KeyValue key="fixedHeight" value="24" type="number"/>
-				</KeyValues>
-				<Anchors>
-					<Anchor point="TOP" y="-14"/>
-				</Anchors>
-			</Frame>
-			<Frame parentKey="ItemFrame" inherits="LargeItemButtonTemplate">
-				<Anchors>
-					<Anchor point="TOP" y="-14"/>
-				</Anchors>
-				<Scripts>
-					<OnEnter>
-						GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
-						GameTooltip:SetHyperlink(self.itemHyperlink);
-					</OnEnter>
-					<OnLeave>
-						GameTooltip:Hide();
-					</OnLeave>
-				</Scripts>
-			</Frame>
-			<Frame parentKey="AlsoItemsFrame" useParentLevel="true" inherits="HorizontalLayoutFrame">
-				<Size x="200" y="24"/>
-				<Anchors>
-					<Anchor point="BOTTOM" y="6"/>
-				</Anchors>
-				<KeyValues>
-					<KeyValue key="spacing" value="6" type="number"/>
-					<KeyValue key="expand" value="true" type="boolean"/>
-				</KeyValues>
-				<Anchors>
-					<Anchor point="BOTTOM" relativePoint="TOP" y="15"/>
-				</Anchors>
-				<Layers>
-					<Layer level="ARTWORK">
-						<FontString parentKey="Text" inherits="GameFontHighlight" justifyV="MIDDLE" text="WEEKLY_REWARDS_ALSO_RECEIVE">
-							<Size y="24"/>
-							<KeyValues>
-								<KeyValue key="layoutIndex" value="0" type="number"/>
-							</KeyValues>
-							<Color color="GREEN_FONT_COLOR"/>
-						</FontString>
-					</Layer>
-				</Layers>
-			</Frame>
-		</Frames>
-		<Scripts>
-			<OnEvent method="OnEvent"/>
-		</Scripts>
-	</Frame> -->
-
 	<Frame name="ShareVaultNineSliceTemplate" inherits="NineSlicePanelTemplate" setAllPoints="true" virtual="true"/>
-
-	<Frame name="ShareVaultOverlayTemplate" mixin="ShareVaultOverlayMixin" frameLevel="1250" virtual="true">
-		<Size x="500" y="278"/>
-		<Layers>
-			<Layer level="BACKGROUND">
-				<Texture parentKey="Background" atlas="evergreen-weeklyrewards-frame-back">
-					<Anchors>
-						<Anchor point="TOPLEFT" x="8" y="-8"/>
-						<Anchor point="BOTTOMRIGHT" x="-8" y="8"/>
-					</Anchors>
-				</Texture>
-			</Layer>
-			<Layer level="ARTWORK">
-				<FontString parentKey="Title" inherits="SystemFont_Large" justifyH="CENTER" text="WEEKLY_REWARDS_UNCLAIMED_TITLE">
-					<Anchors>
-						<Anchor point="TOP" x="0" y="-46"/>
-					</Anchors>
-					<Color color="GREEN_FONT_COLOR"/>
-				</FontString>
-				<FontString parentKey="Text" inherits="GameFontNormalMed3" justifyH="CENTER" text="WEEKLY_REWARDS_UNCLAIMED_TEXT">
-					<Size x="370" y="0"/>
-					<Anchors>
-						<Anchor point="TOP" relativePoint="BOTTOM" x="0" y="78"/>
-					</Anchors>
-					<Color color="HIGHLIGHT_FONT_COLOR"/>
-				</FontString>
-			</Layer>
-		</Layers>
-		<Frames>
-			<Frame parentKey="NineSlice" inherits="ShareVaultNineSliceTemplate" frameLevel="2000"/>
-			<ModelScene parentKey="ModelScene" inherits="ScriptAnimatedModelSceneTemplate" setAllPoints="true" drawLayer="BACKGROUND" frameLevel="1500"/>
-			<Frame setAllPoints="true">
-				<Layers>
-					<Layer level="ARTWORK">
-						<Texture parentKey="Orb" useAtlasSize="true">
-							<Anchors>
-								<Anchor point="CENTER" x="0" y="6"/>
-							</Anchors>
-						</Texture>
-					</Layer>
-				</Layers>
-			</Frame>
-		</Frames>
-		<Scripts>
-			<OnShow method="OnShow"/>
-			<OnHide method="OnHide"/>
-		</Scripts>
-	</Frame>
 
 	<Frame name="ShareVaultFrame" mixin="ShareVaultMixin" parent="UIParent" hidden="true" enableMouse="true" toplevel="true" frameLevel="100">
 		<Size x="1165" y="657"/>
@@ -614,7 +490,7 @@
 			</Frame>
 			<ModelScene parentKey="ModelScene" inherits="ScriptAnimatedModelSceneTemplate" setAllPoints="true" drawLayer="BACKGROUND" frameLevel="300"/>
 			<Frame parentKey="ConcessionFrame" parentArray="Activities" mixin="ShareVaultConcessionMixin">
-				<Size x="440" y="45"/>
+				<!-- <Size x="440" y="45"/>
 				<KeyValues>
 					<KeyValue key="type" value="Enum.ShareVaultChestThresholdType.Concession" type="global"/>
 					<KeyValue key="index" value="1" type="number"/>
@@ -698,33 +574,8 @@
 							</Layer>
 						</Layers>
 					</Frame>
-				</Frames>
-				<Scripts>
-					<OnMouseDown method="OnMouseDown"/>
-					<OnEnter method="OnEnter"/>
-					<OnLeave method="OnLeave"/>
-				</Scripts>
+				</Frames> -->
 			</Frame>
-			<!-- <Button parentKey="SelectRewardButton" inherits="UIPanelButtonTemplate" text="WEEKLY_REWARDS_SELECT_REWARD" frameLevel="6000" hidden="true">
-				<Size x="182" y="23"/>
-				<Anchors>
-					<Anchor point="BOTTOM" x="0" y="3"/>
-				</Anchors>
-				<Layers>
-					<Layer level="BACKGROUND" textureSubLevel="-1">
-						<Texture parentKey="Background" atlas="evergreen-weeklyrewards-frame-selectbutton" useAtlasSize="true">
-							<Anchors>
-								<Anchor point="CENTER" x="0" y="0"/>
-							</Anchors>
-						</Texture>
-					</Layer>
-				</Layers>
-				<Scripts>
-					<OnClick>
-						self:GetParent():SelectReward();
-					</OnClick>
-				</Scripts>
-			</Button> -->
 			<Button parentKey="CloseButton" inherits="UIPanelCloseButton" frameLevel="6000">
 				<Anchors>
 					<Anchor point="TOPRIGHT" x="-10" y="-8"/>
@@ -735,56 +586,6 @@
 			<OnLoad method="OnLoad"/>
 			<OnShow method="OnShow"/>
 			<OnHide method="OnHide"/>
-			<!-- <OnEvent method="OnEvent"/> -->
 		</Scripts>
 	</Frame>
-
-	<!-- <Frame name="ShareVaultExpirationWarningDialog" enableMouse="true" mixin="GreatVaultRetirementWarningFrameMixin" frameLevel="500" hidden="true">
-		<Size x="420" y="69"/>
-		<KeyValues>
-			<KeyValue key="layoutType" value="TooltipMixedLayout" type="string"/>
-		</KeyValues>
-		<Anchors>
-			<Anchor point="TOP" relativeTo="ShareVaultFrame" relativePoint="BOTTOM" x="0" y="5"/>
-		</Anchors>
-		<Layers>
-			<Layer level="ARTWORK">
-				<Texture parentKey="WarningIcon" file="Interface\DialogFrame\UI-Dialog-Icon-AlertNew">
-					<Size x="26" y="26"/>
-					<Anchors>
-						<Anchor point="LEFT" x="20" y="0"/>
-					</Anchors>
-				</Texture>
-				<FontString parentKey="Description" inherits="GameFontHighlightSmall" justifyH="LEFT" justifyV="MIDDLE">
-					<Size y="55"/>
-					<Anchors>
-						<Anchor point="LEFT" relativeKey="$parent.WarningIcon" relativePoint="RIGHT" x="5" y="3"/>
-					</Anchors>
-				</FontString>
-			</Layer>
-		</Layers>
-		<Frames>
-			<Frame parentKey="NineSlice" inherits="NineSlicePanelTemplate" useParentLevel="true">
-				<Layers>
-					<Layer level="BACKGROUND">
-						<Texture parentKey="ExtraBG" atlas="Tooltip-NineSlice-Center">
-							<Anchors>
-								<Anchor point="TOPLEFT" relativePoint="TOPLEFT" x="6" y="-6"/>
-								<Anchor point="BOTTOMRIGHT" relativePoint="BOTTOMRIGHT" x="-7" y="7"/>
-							</Anchors>
-							<Color color="BLACK_FONT_COLOR"/>
-						</Texture>
-					</Layer>
-				</Layers>
-				<Scripts>
-					<OnShow>
-						self:SetCenterColor(0, 0, 0, 1);
-					</OnShow>
-				</Scripts>
-			</Frame>
-		</Frames>
-		<Scripts>
-			<OnShow method="OnShow"/>
-		</Scripts>
-	</Frame> -->
 </Ui>

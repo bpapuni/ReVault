@@ -1,9 +1,4 @@
-local gemId = 201793;
-local tokenId = 201836;
-local keystoneId = 180653;
-
 local Comm = LibStub:GetLibrary("AceComm-3.0")
-local SharedVaultFrame = SharedVaultFrame;
 local LibSerialize = LibStub("LibSerialize");
 local LibDeflate = LibStub("LibDeflate");
 local configForDeflate = {level = 1}
@@ -91,28 +86,18 @@ local function crossRealmSendCommMessage(prefix, text, target)
 end
 
 local function GetRewards()
-	local rewards = C_WeeklyRewards.GetActivities()
-	local numRewards = 0;
-	for i, rewardInfo in ipairs(rewards) do
-		if #rewardInfo.rewards > 0 then
-			for j, reward in ipairs(rewardInfo.rewards) do 
-				if reward.id ~= 201793 and reward.id ~= 201836 and reward.id ~= 180653 then 
-					reward["itemLink"] = C_WeeklyRewards.GetItemHyperlink(reward.itemDBID);
-					numRewards = numRewards + 1;
-				end 
-			end
-		end
-	end
+	local weeklyRewardsActivities = C_WeeklyRewards.GetActivities()
 
-	if numRewards > 0 then
-		for i, rewardInfo in ipairs(rewards) do
-			if #rewardInfo.rewards == 0 then
-				rewardInfo.progress = 0;
-			end
+	for i, activity in ipairs(weeklyRewardsActivities) do
+		if activity.rewards and #activity.rewards > 0 then
+			local itemDBID = activity.rewards[1].itemDBID
+			activity.rewards = { itemLink = C_WeeklyRewards.GetItemHyperlink(itemDBID) }
+		else
+			activity.rewards =  {}
 		end
 	end
-	-- DevTools_Dump(rewards[1])
-	return rewards;
+	
+	return weeklyRewardsActivities;
 end
 
 Comm:RegisterComm("ShareVault", function(prefix, message, chattype, sender)
@@ -124,7 +109,7 @@ Comm:RegisterComm("ShareVault", function(prefix, message, chattype, sender)
 		local yourName, realm = UnitFullName("player")
 		if request and requestTarget == yourName.."-"..realm then
 			local rewards = GetRewards();
-			rewards.Owner = requestTarget;
+			rewards.owner = requestTarget;
 			local serialized = LibSerialize:SerializeEx(configForLS, rewards);
 			local compressed = LibDeflate:CompressDeflate(serialized, configForDeflate);
 			local encoded = LibDeflate:EncodeForPrint(compressed);
@@ -133,15 +118,14 @@ Comm:RegisterComm("ShareVault", function(prefix, message, chattype, sender)
 			local decoded = LibDeflate:DecodeForPrint(response)
 			local decompressed = LibDeflate:DecompressDeflate(decoded)
 			local success, deserialized = LibSerialize:Deserialize(decompressed)
-
-			-- DevTools_Dump(deserialized)
-			TEST_TABLE = deserialized;
-			SharedVaultFrame:Show();
+			
+			ShareVaultFrame.activities = deserialized;
+			ShareVaultFrame:Show();
 		end
 	else
 		if request then
 			local rewards = GetRewards();
-			rewards.Owner = UnitName("player");
+			rewards.owner = UnitName("player");
 			local serialized = LibSerialize:SerializeEx(configForLS, rewards);
 			local compressed = LibDeflate:CompressDeflate(serialized, configForDeflate);
 			local encoded = LibDeflate:EncodeForPrint(compressed);
@@ -150,10 +134,9 @@ Comm:RegisterComm("ShareVault", function(prefix, message, chattype, sender)
 			local decoded = LibDeflate:DecodeForPrint(response)
 			local decompressed = LibDeflate:DecompressDeflate(decoded)
 			local success, deserialized = LibSerialize:Deserialize(decompressed)
-
-			-- DevTools_Dump(deserialized)
-			TEST_TABLE = deserialized;
-			SharedVaultFrame:Show();
+			
+			ShareVaultFrame.activities = deserialized;
+			ShareVaultFrame:Show();
 		end
 	end
 end)

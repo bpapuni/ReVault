@@ -88,6 +88,30 @@
         "RED_FONT_COLOR",
         "GREAT_VAULT_REWARDS_CURRENT_LEVEL_HEROIC",
         "GREAT_VAULT_REWARDS_CURRENT_LEVEL_MYTHIC",
-        "ItemUtil"
+        "ItemUtil",
+        "WEEKLY_REWARDS_THRESHOLD_WORLD",
+        "WEEKLY_REWARDS_ITEM_LEVEL_WORLD",
+        "GREAT_VAULT_REWARDS_WORLD_INCOMPLETE",
+        "WEEKLY_REWARDS_COMPLETE_WORLD",
+        "GREAT_VAULT_REWARDS_WORLD_COMPLETED_FIRST",
+        "GREAT_VAULT_REWARDS_WORLD_COMPLETED_SECOND",
+        "UIPanelWindows",
+        "ShowMacroFrame",
+        "WeeklyRewardsMixin"
+    ],
+    "Lua.runtime.version": "Lua 5.1",
+    "Lua.runtime.builtin": {
+        "basic": "disable",
+        "debug": "disable",
+        "io": "disable",
+        "math": "disable",
+        "os": "disable",
+        "package": "disable",
+        "string": "disable",
+        "table": "disable",
+        "utf8": "disable"
+    },
+    "Lua.workspace.library": [
+        "c:\\Users\\Brent\\.vscode\\extensions\\ketho.wow-api-0.15.5\\Annotations"
     ]
 }
