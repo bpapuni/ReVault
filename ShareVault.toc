@@ -4,6 +4,8 @@
 ## Version: v1.0.0
 ## Notes: |cff36e5ffShare your vault.|r
 
+## SavedVariables: ShareVaultData
+
 embeds.xml
 ShareVault.xml
 ## ../Blizzard_WeeklyRewards/Blizzard_WeeklyRewards.xml

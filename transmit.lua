@@ -82,6 +82,8 @@ local function crossRealmSendCommMessage(prefix, text, target)
 			-- text = ("%s:%s"):format(target, text)
 		end
 	end
+	-- local success = C_ChatInfo.SendAddonMessage(prefix, "a", chattype, target)
+	-- print("Online: "..tostring(success));
 	Comm:SendCommMessage(prefix, text, chattype, target)
 end
 
@@ -107,13 +109,16 @@ Comm:RegisterComm("ShareVault", function(prefix, message, chattype, sender)
 		local _, _, requestTarget = message:find("([^%s]+):request");
 		local _, _, responseTarget = message:find("([^%s]+):response");
 		local yourName, realm = UnitFullName("player")
+		-- Player has received a request
 		if request and requestTarget == yourName.."-"..realm then
 			local rewards = GetRewards();
 			rewards.owner = requestTarget;
+			rewards.timestamp = GetTime();
 			local serialized = LibSerialize:SerializeEx(configForLS, rewards);
 			local compressed = LibDeflate:CompressDeflate(serialized, configForDeflate);
 			local encoded = LibDeflate:EncodeForPrint(compressed);
 			crossRealmSendCommMessage("ShareVault", sender .. ":response:" .. encoded, sender)
+		-- Player has received a response
 		elseif response and responseTarget == yourName.."-"..realm then
 			local decoded = LibDeflate:DecodeForPrint(response)
 			local decompressed = LibDeflate:DecompressDeflate(decoded)
@@ -121,11 +126,16 @@ Comm:RegisterComm("ShareVault", function(prefix, message, chattype, sender)
 			
 			ShareVaultFrame.activities = deserialized;
 			ShareVaultFrame:Show();
+		-- TODO Detect if no response
+		-- elseif request ~= nil and response == nil then
+		-- 	print(response)
 		end
 	else
 		if request then
 			local rewards = GetRewards();
-			rewards.owner = UnitName("player");
+			local yourName, realm = UnitFullName("player");
+			rewards.owner = yourName.."-"..realm;
+			rewards.timestamp = GetTime();
 			local serialized = LibSerialize:SerializeEx(configForLS, rewards);
 			local compressed = LibDeflate:CompressDeflate(serialized, configForDeflate);
 			local encoded = LibDeflate:EncodeForPrint(compressed);
@@ -134,8 +144,9 @@ Comm:RegisterComm("ShareVault", function(prefix, message, chattype, sender)
 			local decoded = LibDeflate:DecodeForPrint(response)
 			local decompressed = LibDeflate:DecompressDeflate(decoded)
 			local success, deserialized = LibSerialize:Deserialize(decompressed)
-			
+
 			ShareVaultFrame.activities = deserialized;
+			ShareVaultData[deserialized.owner] = deserialized;
 			ShareVaultFrame:Show();
 		end
 	end

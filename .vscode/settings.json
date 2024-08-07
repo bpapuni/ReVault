@@ -97,7 +97,8 @@
         "GREAT_VAULT_REWARDS_WORLD_COMPLETED_SECOND",
         "UIPanelWindows",
         "ShowMacroFrame",
-        "WeeklyRewardsMixin"
+        "WeeklyRewardsMixin",
+        "message"
     ],
     "Lua.runtime.version": "Lua 5.1",
     "Lua.runtime.builtin": {

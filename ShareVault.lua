@@ -48,7 +48,12 @@ function ShareVaultMixin:OnLoad()
     self:RegisterForDrag("LeftButton")
     self:SetScript("OnDragStart", self.StartMoving)
     self:SetScript("OnDragStop", self.StopMovingOrSizing)
-	
+
+	if ShareVaultData == nil then
+        ShareVaultData = {
+        }
+    end
+
 	self:SetUpActivity(self.RaidFrame, RAIDS, "evergreen-weeklyrewards-category-raids", Enum.WeeklyRewardChestThresholdType.Raid);
 	self:SetUpActivity(self.MythicFrame, DUNGEONS, "evergreen-weeklyrewards-category-dungeons", Enum.WeeklyRewardChestThresholdType.Activities);
 
@@ -65,7 +70,7 @@ function ShareVaultMixin:OnLoad()
 end
 
 function ShareVaultMixin:OnShow()
-	PlaySound(SOUNDKIT.UI_WEEKLY_REWARD_OPEN_WINDOW);	
+	PlaySound(SOUNDKIT.UI_WEEKLY_REWARD_OPEN_WINDOW);
 	self:FullRefresh();
 end
 
