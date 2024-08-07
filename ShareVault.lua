@@ -1,3 +1,4 @@
+--/dump C_Item.GetItemInfo(C_WeeklyRewards.GetItemHyperlink("0x40000009699B0ACF"))
 local TEST_TABLE = {
 	Owner = "Papdh-Frostmourne",
 	Rewards = {
@@ -39,142 +40,142 @@ local TEST_TABLE = {
 	}
 }
 
-local TEST_TABLE_2 = {
-	Owner = "Papdh-Frostmourne",
-	Rewards = {
-		[1]={
-			type=1,
-			index=3,
-			progress=7,
-			rewards={
-			},
-			threshold=8,
-			level=15,
-			raidString="Defeat....",
-			id=78 
-		},
-		[2]={
-			type=1,
-			index=1,
-			progress=7,
-			rewards={
-				{
-					id=221163,
-					type=Enum.WeeklyRewardChestThresholdType.MythicPlus
-				}
-			},
-			threshold=2,
-			level=15,
-			raidString="Defeat....",
-			id=79 
-		},
-		[3]={
-			type=1,
-			index=2,
-			progress=7,
-			rewards={
-				{
-					id=221163,
-					type=Enum.WeeklyRewardChestThresholdType.MythicPlus
-				}
-			},
-			threshold=4,
-			level=15,
-			raidString="Defeat....",
-			id=80 
-		},
-		[4]={
-			type=2,
-			index=1,
-			progress=5500,
-			rewards={
-				{
-					id=221163,
-					type=Enum.WeeklyRewardChestThresholdType.World				
-				}
-			},
-			threshold=1250,
-			level=15,
-			raidString="Defeat....",
-			id=81 
-		},
-		[5]={
-			type=2,
-			index=2,
-			progress=5500,
-			rewards={
-				{
-					id=221163,
-					type=Enum.WeeklyRewardChestThresholdType.World	
-				}
-			},
-			threshold=2500,
-			level=15,
-			raidString="Defeat....",
-			id=82 
-		},
-		[6]={
-			type=2,
-			index=3,
-			progress=5500,
-			rewards={
-				{
-					id=221163,
-					type=Enum.WeeklyRewardChestThresholdType.World	
-				}
-			},
-			threshold=5500,
-			level=15,
-			raidString="Defeat....",
-			id=83 
-		},
-		[7]={
-			type=3,
-			index=1,
-			progress=8,
-			rewards={
-				{
-					id=221163,
-					type=Enum.WeeklyRewardChestThresholdType.Raid
-				}
-			},
-			threshold=2,
-			level=0,
-			raidString="Defeat....",
-			id=84 
-		},
-		[8]={
-			type=3,
-			index=2,
-			progress=8,
-			rewards={
-				{
-					id=221163,
-					type=Enum.WeeklyRewardChestThresholdType.Raid
-				}
-			},
-			threshold=4,
-			level=0,
-			raidString="Defeat....",
-			id=85 
-		},
-		[9]={
-			type=3,
-			index=3,
-			progress=8,
-			rewards={
-				{
-					id=221163,
-					type=Enum.WeeklyRewardChestThresholdType.Raid
-				}
-			},
-			threshold=6,
-			level=0,
-			raidString="Defeat....",
-			id=86 
-		}
-	}
-}
+-- local TEST_TABLE_2 = {
+-- 	Owner = "Papdh-Frostmourne",
+-- 	Rewards = {
+-- 		[1]={
+-- 			type=1,
+-- 			index=3,
+-- 			progress=7,
+-- 			rewards={
+-- 			},
+-- 			threshold=8,
+-- 			level=15,
+-- 			raidString="Defeat....",
+-- 			id=78 
+-- 		},
+-- 		[2]={
+-- 			type=1,
+-- 			index=1,
+-- 			progress=7,
+-- 			rewards={
+-- 				{
+-- 					id=221163,
+-- 					type=Enum.WeeklyRewardChestThresholdType.MythicPlus
+-- 				}
+-- 			},
+-- 			threshold=2,
+-- 			level=15,
+-- 			raidString="Defeat....",
+-- 			id=79 
+-- 		},
+-- 		[3]={
+-- 			type=1,
+-- 			index=2,
+-- 			progress=7,
+-- 			rewards={
+-- 				{
+-- 					id=221163,
+-- 					type=Enum.WeeklyRewardChestThresholdType.MythicPlus
+-- 				}
+-- 			},
+-- 			threshold=4,
+-- 			level=15,
+-- 			raidString="Defeat....",
+-- 			id=80 
+-- 		},
+-- 		[4]={
+-- 			type=2,
+-- 			index=1,
+-- 			progress=5500,
+-- 			rewards={
+-- 				{
+-- 					id=221163,
+-- 					type=Enum.WeeklyRewardChestThresholdType.World				
+-- 				}
+-- 			},
+-- 			threshold=1250,
+-- 			level=15,
+-- 			raidString="Defeat....",
+-- 			id=81 
+-- 		},
+-- 		[5]={
+-- 			type=2,
+-- 			index=2,
+-- 			progress=5500,
+-- 			rewards={
+-- 				{
+-- 					id=221163,
+-- 					type=Enum.WeeklyRewardChestThresholdType.World	
+-- 				}
+-- 			},
+-- 			threshold=2500,
+-- 			level=15,
+-- 			raidString="Defeat....",
+-- 			id=82 
+-- 		},
+-- 		[6]={
+-- 			type=2,
+-- 			index=3,
+-- 			progress=5500,
+-- 			rewards={
+-- 				{
+-- 					id=221163,
+-- 					type=Enum.WeeklyRewardChestThresholdType.World	
+-- 				}
+-- 			},
+-- 			threshold=5500,
+-- 			level=15,
+-- 			raidString="Defeat....",
+-- 			id=83 
+-- 		},
+-- 		[7]={
+-- 			type=3,
+-- 			index=1,
+-- 			progress=8,
+-- 			rewards={
+-- 				{
+-- 					id=221163,
+-- 					type=Enum.WeeklyRewardChestThresholdType.Raid
+-- 				}
+-- 			},
+-- 			threshold=2,
+-- 			level=0,
+-- 			raidString="Defeat....",
+-- 			id=84 
+-- 		},
+-- 		[8]={
+-- 			type=3,
+-- 			index=2,
+-- 			progress=8,
+-- 			rewards={
+-- 				{
+-- 					id=221163,
+-- 					type=Enum.WeeklyRewardChestThresholdType.Raid
+-- 				}
+-- 			},
+-- 			threshold=4,
+-- 			level=0,
+-- 			raidString="Defeat....",
+-- 			id=85 
+-- 		},
+-- 		[9]={
+-- 			type=3,
+-- 			index=3,
+-- 			progress=8,
+-- 			rewards={
+-- 				{
+-- 					id=221163,
+-- 					type=Enum.WeeklyRewardChestThresholdType.Raid
+-- 				}
+-- 			},
+-- 			threshold=6,
+-- 			level=0,
+-- 			raidString="Defeat....",
+-- 			id=86 
+-- 		}
+-- 	}
+-- }
 
 -- increment the index for each slash command
 SLASH_SV1 = "/sv"
@@ -228,37 +229,37 @@ local WEEKLY_REWARDS_EVENTS = {
 
 ShareVaultMixin = { };
 
-function ShareVaultMixin:SetUpConditionalActivities()
-	self.showWorldRow = false;
-	-- local activities = C_WeeklyRewards.GetActivities();
-	-- local activities = TEST_TABLE_2.Rewards;
-	local activities = TEST_TABLE.Rewards;
-	for i, activityInfo in ipairs(activities) do
-		-- activityInfo.progress = 0;
-		-- if activityInfo.type == Enum.WeeklyRewardChestThresholdType.World then
-			self.showWorldRow = true;
-			-- break;
-		-- end
-	end
+-- function ShareVaultMixin:SetUpConditionalActivities()
+-- 	self.showWorldRow = false;
+-- 	-- local activities = C_WeeklyRewards.GetActivities();
+-- 	-- local activities = TEST_TABLE_2.Rewards;
+-- 	local activities = TEST_TABLE.Rewards;
+-- 	for i, activityInfo in ipairs(activities) do
+-- 		-- activityInfo.progress = 0;
+-- 		-- if activityInfo.type == Enum.WeeklyRewardChestThresholdType.World then
+-- 			self.showWorldRow = true;
+-- 			-- break;
+-- 		-- end
+-- 	end
 
-	-- self.showPVPRow = not self.showWorldRow;
+-- 	-- self.showPVPRow = not self.showWorldRow;
 
-	-- self:SetActivityShown(self.showPVPRow, self.PVPFrame, Enum.WeeklyRewardChestThresholdType.RankedPvP);
-	-- if self.showPVPRow then
-	-- 	self:SetUpActivity(self.PVPFrame, PVP, "evergreen-weeklyrewards-category-pvp", Enum.WeeklyRewardChestThresholdType.RankedPvP);
-	-- end
+-- 	-- self:SetActivityShown(self.showPVPRow, self.PVPFrame, Enum.WeeklyRewardChestThresholdType.RankedPvP);
+-- 	-- if self.showPVPRow then
+-- 	-- 	self:SetUpActivity(self.PVPFrame, PVP, "evergreen-weeklyrewards-category-pvp", Enum.WeeklyRewardChestThresholdType.RankedPvP);
+-- 	-- end
 
-	self:SetActivityShown(self.showWorldRow, self.WorldFrame, Enum.WeeklyRewardChestThresholdType.World);
-	if self.showWorldRow then
-		self:SetUpActivity(self.WorldFrame, WORLD, "evergreen-weeklyrewards-category-world", Enum.WeeklyRewardChestThresholdType.World);
-	end
-end
+-- 	self:SetActivityShown(self.showWorldRow, self.WorldFrame, Enum.WeeklyRewardChestThresholdType.World);
+-- 	if self.showWorldRow then
+-- 		self:SetUpActivity(self.WorldFrame, WORLD, "evergreen-weeklyrewards-category-world", Enum.WeeklyRewardChestThresholdType.World);
+-- 	end
+-- end
 
 function ShareVaultMixin:OnLoad()
 	self:SetUpActivity(self.RaidFrame, RAIDS, "evergreen-weeklyrewards-category-raids", Enum.WeeklyRewardChestThresholdType.Raid);
 	self:SetUpActivity(self.MythicFrame, DUNGEONS, "evergreen-weeklyrewards-category-dungeons", Enum.WeeklyRewardChestThresholdType.Activities);
-
-	self:SetUpConditionalActivities();
+	self:SetUpActivity(self.WorldFrame, WORLD, "evergreen-weeklyrewards-category-world", Enum.WeeklyRewardChestThresholdType.World);
+	-- self:SetUpConditionalActivities();
 
 	local attributes =
 	{
@@ -757,47 +758,47 @@ function ShareVaultActivityMixin:CanShowPreviewItemTooltip()
 end
 
 function ShareVaultActivityMixin:OnEnter()
-	if self:CanShowPreviewItemTooltip() then
+	-- if self:CanShowPreviewItemTooltip() then
 		self:ShowPreviewItemTooltip();
-	elseif self.info then
-		if self.info.type == Enum.WeeklyRewardChestThresholdType.Activities then
-			local function AddMythicProgressLines()
-				if self.info.progress > 0 then
-					GameTooltip_AddBlankLineToTooltip(GameTooltip);
-					local lowestLevel = WeeklyRewardsUtil.GetLowestLevelInTopDungeonRuns(self.info.threshold);
-					if lowestLevel == WeeklyRewardsUtil.HeroicLevel then
-						GameTooltip_AddNormalLine(GameTooltip, GREAT_VAULT_REWARDS_CURRENT_LEVEL_HEROIC:format(self.info.threshold));
-					else
-						GameTooltip_AddNormalLine(GameTooltip, GREAT_VAULT_REWARDS_CURRENT_LEVEL_MYTHIC:format(self.info.threshold, lowestLevel));
-					end
-					self:AddTopRunsToTooltip();
-				end
-			end
+	-- elseif self.info then
+	-- 	if self.info.type == Enum.WeeklyRewardChestThresholdType.Activities then
+	-- 		local function AddMythicProgressLines()
+	-- 			if self.info.progress > 0 then
+	-- 				GameTooltip_AddBlankLineToTooltip(GameTooltip);
+	-- 				local lowestLevel = WeeklyRewardsUtil.GetLowestLevelInTopDungeonRuns(self.info.threshold);
+	-- 				if lowestLevel == WeeklyRewardsUtil.HeroicLevel then
+	-- 					GameTooltip_AddNormalLine(GameTooltip, GREAT_VAULT_REWARDS_CURRENT_LEVEL_HEROIC:format(self.info.threshold));
+	-- 				else
+	-- 					GameTooltip_AddNormalLine(GameTooltip, GREAT_VAULT_REWARDS_CURRENT_LEVEL_MYTHIC:format(self.info.threshold, lowestLevel));
+	-- 				end
+	-- 				self:AddTopRunsToTooltip();
+	-- 			end
+	-- 		end
 
-			local description = GREAT_VAULT_REWARDS_MYTHIC_INCOMPLETE;
-			local formatRemainingProgress = false;
-			if self.info.index == 2 then
-				description = GREAT_VAULT_REWARDS_MYTHIC_COMPLETED_FIRST;
-				formatRemainingProgress = true;
-			elseif self.info.index == 3 then
-				description = GREAT_VAULT_REWARDS_MYTHIC_COMPLETED_SECOND;
-				formatRemainingProgress = true;
-			end
+	-- 		local description = GREAT_VAULT_REWARDS_MYTHIC_INCOMPLETE;
+	-- 		local formatRemainingProgress = false;
+	-- 		if self.info.index == 2 then
+	-- 			description = GREAT_VAULT_REWARDS_MYTHIC_COMPLETED_FIRST;
+	-- 			formatRemainingProgress = true;
+	-- 		elseif self.info.index == 3 then
+	-- 			description = GREAT_VAULT_REWARDS_MYTHIC_COMPLETED_SECOND;
+	-- 			formatRemainingProgress = true;
+	-- 		end
 
-			self:ShowIncompleteTooltip(WEEKLY_REWARDS_UNLOCK_REWARD, description, formatRemainingProgress, AddMythicProgressLines);
-		elseif self.info.type == Enum.WeeklyRewardChestThresholdType.World then
+	-- 		self:ShowIncompleteTooltip(WEEKLY_REWARDS_UNLOCK_REWARD, description, formatRemainingProgress, AddMythicProgressLines);
+	-- 	elseif self.info.type == Enum.WeeklyRewardChestThresholdType.World then
 			
-			local description = GREAT_VAULT_REWARDS_WORLD_INCOMPLETE;
-			if self.info.index == 2 then
-				description = GREAT_VAULT_REWARDS_WORLD_COMPLETED_FIRST;
-			elseif self.info.index == 3 then
-				description = GREAT_VAULT_REWARDS_WORLD_COMPLETED_SECOND;
-			end
+	-- 		local description = GREAT_VAULT_REWARDS_WORLD_INCOMPLETE;
+	-- 		if self.info.index == 2 then
+	-- 			description = GREAT_VAULT_REWARDS_WORLD_COMPLETED_FIRST;
+	-- 		elseif self.info.index == 3 then
+	-- 			description = GREAT_VAULT_REWARDS_WORLD_COMPLETED_SECOND;
+	-- 		end
 
-			local formatRemainingProgress = true;
-			self:ShowIncompleteTooltip(WEEKLY_REWARDS_UNLOCK_REWARD, description, formatRemainingProgress)
-		end
-	end
+	-- 		local formatRemainingProgress = true;
+	-- 		self:ShowIncompleteTooltip(WEEKLY_REWARDS_UNLOCK_REWARD, description, formatRemainingProgress)
+	-- 	end
+	-- end
 end
 
 function ShareVaultActivityMixin:ShowIncompleteTooltip(title, description, formatRemainingProgress, addProgressLineCallback)
@@ -817,49 +818,54 @@ function ShareVaultActivityMixin:ShowIncompleteTooltip(title, description, forma
 end
 
 function ShareVaultActivityMixin:ShowPreviewItemTooltip()
-	DevTools_Dump(select(2, C_Item.GetItemInfo(self.info.itemId)))
-	GameTooltip:SetOwner(self, "ANCHOR_RIGHT", -7, -11);
+	-- GameTooltip:SetOwner(self, "ANCHOR_RIGHT", -7, -11);
+	GameTooltip:SetOwner(self.ItemFrame, "ANCHOR_RIGHT", -3, -6);
 	GameTooltip_SetTitle(GameTooltip, WEEKLY_REWARDS_CURRENT_REWARD);
-	local itemName, itemLink = C_Item.GetItemInfo(self.info.itemId);
-	local itemLevel, upgradeItemLevel;
-	if itemLink then
-		-- TODO get tooltip displaying on thise mouseover
-		itemLevel = C_Item.GetDetailedItemLevelInfo(itemLink);
-	end
-	if upgradeItemLink then
-		upgradeItemLevel = C_Item.GetDetailedItemLevelInfo(upgradeItemLink);
-	end
-	if not itemLevel then
-		GameTooltip_AddErrorLine(GameTooltip, RETRIEVING_ITEM_INFO);
-		self.UpdateTooltip = self.ShowPreviewItemTooltip;
-	else
-		self.UpdateTooltip = nil;
-		if self.info.type == Enum.WeeklyRewardChestThresholdType.Raid then
-			self:HandlePreviewRaidRewardTooltip(itemLevel, upgradeItemLevel);
-		elseif self.info.type == Enum.WeeklyRewardChestThresholdType.Activities then
-			local hasData, nextActivityTierID, nextLevel, nextItemLevel = C_WeeklyRewards.GetNextActivitiesIncrease(self.info.activityTierID, self.info.level);
-			if hasData then
-				upgradeItemLevel = nextItemLevel;
-			else
-				nextLevel = WeeklyRewardsUtil.GetNextMythicLevel(self.info.level);
-			end
-			self:HandlePreviewMythicRewardTooltip(itemLevel, upgradeItemLevel, nextLevel);
-		elseif self.info.type == Enum.WeeklyRewardChestThresholdType.RankedPvP then
-			self:HandlePreviewPvPRewardTooltip(itemLevel, upgradeItemLevel);
-		elseif self.info.type == Enum.WeeklyRewardChestThresholdType.World then
-			local hasData, nextActivityTierID, nextLevel, nextItemLevel = C_WeeklyRewards.GetNextActivitiesIncrease(self.info.activityTierID, self.info.level);
-			if hasData then
-				upgradeItemLevel = nextItemLevel;
-			else
-				nextLevel = self.info.level + 1;
-			end
-			self:HandlePreviewWorldRewardTooltip(itemLevel, upgradeItemLevel, nextLevel);
-		end
+	-- GameTooltip:SetWeeklyReward(self.displayedItemDBID);
 
-		if not upgradeItemLevel then
-			GameTooltip_AddColoredLine(GameTooltip, WEEKLY_REWARDS_MAXED_REWARD, GREEN_FONT_COLOR);
-		end
-	end
+	local itemHyperlink = C_WeeklyRewards.GetItemHyperlink(self.info.itemId);
+	local itemName, itemLink = C_Item.GetItemInfo(itemHyperlink);
+	GameTooltip:SetHyperlink(itemLink);
+	-- local itemName, itemLink = C_Item.GetItemInfo(self.info.itemId);
+	-- local itemLevel, upgradeItemLevel;
+	-- if itemLink then
+	-- 	-- TODO get tooltip displaying on thise mouseover
+	-- 	itemLevel = C_Item.GetDetailedItemLevelInfo(itemLink);
+	-- end
+	-- if upgradeItemLink then
+	-- 	upgradeItemLevel = C_Item.GetDetailedItemLevelInfo(upgradeItemLink);
+	-- end
+	-- if not itemLevel then
+	-- 	GameTooltip_AddErrorLine(GameTooltip, RETRIEVING_ITEM_INFO);
+	-- 	self.UpdateTooltip = self.ShowPreviewItemTooltip;
+	-- else
+	-- 	self.UpdateTooltip = nil;
+	-- 	if self.info.type == Enum.WeeklyRewardChestThresholdType.Raid then
+	-- 		self:HandlePreviewRaidRewardTooltip(itemLevel, upgradeItemLevel);
+	-- 	elseif self.info.type == Enum.WeeklyRewardChestThresholdType.Activities then
+	-- 		local hasData, nextActivityTierID, nextLevel, nextItemLevel = C_WeeklyRewards.GetNextActivitiesIncrease(self.info.activityTierID, self.info.level);
+	-- 		if hasData then
+	-- 			upgradeItemLevel = nextItemLevel;
+	-- 		else
+	-- 			nextLevel = WeeklyRewardsUtil.GetNextMythicLevel(self.info.level);
+	-- 		end
+	-- 		self:HandlePreviewMythicRewardTooltip(itemLevel, upgradeItemLevel, nextLevel);
+	-- 	elseif self.info.type == Enum.WeeklyRewardChestThresholdType.RankedPvP then
+	-- 		self:HandlePreviewPvPRewardTooltip(itemLevel, upgradeItemLevel);
+	-- 	elseif self.info.type == Enum.WeeklyRewardChestThresholdType.World then
+	-- 		local hasData, nextActivityTierID, nextLevel, nextItemLevel = C_WeeklyRewards.GetNextActivitiesIncrease(self.info.activityTierID, self.info.level);
+	-- 		if hasData then
+	-- 			upgradeItemLevel = nextItemLevel;
+	-- 		else
+	-- 			nextLevel = self.info.level + 1;
+	-- 		end
+	-- 		self:HandlePreviewWorldRewardTooltip(itemLevel, upgradeItemLevel, nextLevel);
+	-- 	end
+
+	-- 	if not upgradeItemLevel then
+	-- 		GameTooltip_AddColoredLine(GameTooltip, WEEKLY_REWARDS_MAXED_REWARD, GREEN_FONT_COLOR);
+	-- 	end
+	-- end
 	GameTooltip:Show();
 end
 
@@ -1022,6 +1028,7 @@ ShareVaultActivityItemMixin = { };
 
 function ShareVaultActivityItemMixin:OnEnter()
 	GameTooltip:SetOwner(self, "ANCHOR_RIGHT", -3, -6);
+	-- GameTooltip:SetOwner(self:GetParent(), "ANCHOR_RIGHT", -7, -11);
 	-- GameTooltip:SetWeeklyReward(self.displayedItemDBID);
 	GameTooltip:SetHyperlink(self.itemLink);
 	self:SetScript("OnUpdate", self.OnUpdate);
@@ -1051,7 +1058,7 @@ end
 
 function ShareVaultActivityItemMixin:SetDisplayedItem()
 	self.displayedItemDBID = self:GetParent().info.itemId;
-	self.itemLink = WeeklyRewards.GetItemHyperlink(self.displayedItemDBID);
+	self.itemLink = C_WeeklyRewards.GetItemHyperlink(self.displayedItemDBID);
 	local bestItemQuality = 0;
 	local bestItemLevel = 0;
 	-- for i, rewardInfo in ipairs(self:GetParent().info.rewards) do
@@ -1083,11 +1090,13 @@ function ShareVaultActivityItemMixin:SetDisplayedItem()
 	self:SetShown(true);
 end
 
-function ShareVaultActivityItemMixin:SetRewards(rewardId)
+function ShareVaultActivityItemMixin:SetRewards(itemDBID)
+	local itemHyperlink = C_WeeklyRewards.GetItemHyperlink(itemDBID);
+	local itemId = tonumber(itemHyperlink:match("Hitem:(%d+):"));
 	local continuableContainer = ContinuableContainer:Create();
 	-- for i, rewardInfo in ipairs(rewards) do
 		-- if rewardInfo.type == Enum.CachedRewardType.Item then
-		local item = Item:CreateFromItemID(rewardId);
+		local item = Item:CreateFromItemID(itemId);
 		continuableContainer:AddContinuable(item);
 		-- end
 	-- end
