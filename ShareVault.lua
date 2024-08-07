@@ -1,4 +1,5 @@
 --/dump C_Item.GetItemInfo(C_WeeklyRewards.GetItemHyperlink("0x40000009699B0ACF"))
+--/dump C_Item.GetItemInfo(C_WeeklyRewards.GetItemHyperlink("0x40000009699B0ACF"))
 local TEST_TABLE = {
 	Owner = "Papdh-Frostmourne",
 	Rewards = {
@@ -839,50 +840,44 @@ function ShareVaultActivityMixin:ShowIncompleteTooltip(title, description, forma
 end
 
 function ShareVaultActivityMixin:ShowPreviewItemTooltip()
-	if #self.info.rewards == 0 then return end
-	-- GameTooltip:SetOwner(self, "ANCHOR_RIGHT", -7, -11);
-	GameTooltip:SetOwner(self.ItemFrame, "ANCHOR_RIGHT", -3, -6);
+	DevTools_Dump(select(2, C_Item.GetItemInfo(self.info.itemId)))
+	GameTooltip:SetOwner(self, "ANCHOR_RIGHT", -7, -11);
 	GameTooltip_SetTitle(GameTooltip, WEEKLY_REWARDS_CURRENT_REWARD);
-	-- GameTooltip:SetWeeklyReward(self.displayedItemDBID);
-
-	local itemHyperlink = C_WeeklyRewards.GetItemHyperlink(self.info.rewards[1].itemDBID);
-	local itemName, itemLink = C_Item.GetItemInfo(itemHyperlink);
-	GameTooltip:SetHyperlink(itemLink);
-	-- local itemName, itemLink = C_Item.GetItemInfo(self.info.itemId);
-	-- local itemLevel, upgradeItemLevel;
-	-- if itemLink then
-	-- 	-- TODO get tooltip displaying on thise mouseover
-	-- 	itemLevel = C_Item.GetDetailedItemLevelInfo(itemLink);
-	-- end
-	-- if upgradeItemLink then
-	-- 	upgradeItemLevel = C_Item.GetDetailedItemLevelInfo(upgradeItemLink);
-	-- end
-	-- if not itemLevel then
-	-- 	GameTooltip_AddErrorLine(GameTooltip, RETRIEVING_ITEM_INFO);
-	-- 	self.UpdateTooltip = self.ShowPreviewItemTooltip;
-	-- else
-	-- 	self.UpdateTooltip = nil;
-	-- 	if self.info.type == Enum.WeeklyRewardChestThresholdType.Raid then
-	-- 		self:HandlePreviewRaidRewardTooltip(itemLevel, upgradeItemLevel);
-	-- 	elseif self.info.type == Enum.WeeklyRewardChestThresholdType.Activities then
-	-- 		local hasData, nextActivityTierID, nextLevel, nextItemLevel = C_WeeklyRewards.GetNextActivitiesIncrease(self.info.activityTierID, self.info.level);
-	-- 		if hasData then
-	-- 			upgradeItemLevel = nextItemLevel;
-	-- 		else
-	-- 			nextLevel = WeeklyRewardsUtil.GetNextMythicLevel(self.info.level);
-	-- 		end
-	-- 		self:HandlePreviewMythicRewardTooltip(itemLevel, upgradeItemLevel, nextLevel);
-	-- 	elseif self.info.type == Enum.WeeklyRewardChestThresholdType.RankedPvP then
-	-- 		self:HandlePreviewPvPRewardTooltip(itemLevel, upgradeItemLevel);
-	-- 	elseif self.info.type == Enum.WeeklyRewardChestThresholdType.World then
-	-- 		local hasData, nextActivityTierID, nextLevel, nextItemLevel = C_WeeklyRewards.GetNextActivitiesIncrease(self.info.activityTierID, self.info.level);
-	-- 		if hasData then
-	-- 			upgradeItemLevel = nextItemLevel;
-	-- 		else
-	-- 			nextLevel = self.info.level + 1;
-	-- 		end
-	-- 		self:HandlePreviewWorldRewardTooltip(itemLevel, upgradeItemLevel, nextLevel);
-	-- 	end
+	local itemName, itemLink = C_Item.GetItemInfo(self.info.itemId);
+	local itemLevel, upgradeItemLevel;
+	if itemLink then
+		-- TODO get tooltip displaying on thise mouseover
+		itemLevel = C_Item.GetDetailedItemLevelInfo(itemLink);
+	end
+	if upgradeItemLink then
+		upgradeItemLevel = C_Item.GetDetailedItemLevelInfo(upgradeItemLink);
+	end
+	if not itemLevel then
+		GameTooltip_AddErrorLine(GameTooltip, RETRIEVING_ITEM_INFO);
+		self.UpdateTooltip = self.ShowPreviewItemTooltip;
+	else
+		self.UpdateTooltip = nil;
+		if self.info.type == Enum.WeeklyRewardChestThresholdType.Raid then
+			self:HandlePreviewRaidRewardTooltip(itemLevel, upgradeItemLevel);
+		elseif self.info.type == Enum.WeeklyRewardChestThresholdType.Activities then
+			local hasData, nextActivityTierID, nextLevel, nextItemLevel = C_WeeklyRewards.GetNextActivitiesIncrease(self.info.activityTierID, self.info.level);
+			if hasData then
+				upgradeItemLevel = nextItemLevel;
+			else
+				nextLevel = WeeklyRewardsUtil.GetNextMythicLevel(self.info.level);
+			end
+			self:HandlePreviewMythicRewardTooltip(itemLevel, upgradeItemLevel, nextLevel);
+		elseif self.info.type == Enum.WeeklyRewardChestThresholdType.RankedPvP then
+			self:HandlePreviewPvPRewardTooltip(itemLevel, upgradeItemLevel);
+		elseif self.info.type == Enum.WeeklyRewardChestThresholdType.World then
+			local hasData, nextActivityTierID, nextLevel, nextItemLevel = C_WeeklyRewards.GetNextActivitiesIncrease(self.info.activityTierID, self.info.level);
+			if hasData then
+				upgradeItemLevel = nextItemLevel;
+			else
+				nextLevel = self.info.level + 1;
+			end
+			self:HandlePreviewWorldRewardTooltip(itemLevel, upgradeItemLevel, nextLevel);
+		end
 
 	-- 	if not upgradeItemLevel then
 	-- 		GameTooltip_AddColoredLine(GameTooltip, WEEKLY_REWARDS_MAXED_REWARD, GREEN_FONT_COLOR);
@@ -1079,8 +1074,8 @@ function ShareVaultActivityItemMixin:OnClick()
 end
 
 function ShareVaultActivityItemMixin:SetDisplayedItem()
-	self.displayedItemDBID = self:GetParent().info.rewards[1].itemDBID;
-	self.itemLink = C_WeeklyRewards.GetItemHyperlink(self.displayedItemDBID);
+	self.displayedItemDBID = self:GetParent().info.itemId;
+	self.itemLink = WeeklyRewards.GetItemHyperlink(self.displayedItemDBID);
 	local bestItemQuality = 0;
 	local bestItemLevel = 0;
 	-- for i, rewardInfo in ipairs(self:GetParent().info.rewards) do
