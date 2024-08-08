@@ -86,13 +86,57 @@ local function crossRealmSendCommMessage(prefix, text, target)
 	Comm:SendCommMessage(prefix, text, chattype, target)
 end
 
+local function GetEquippedItemsForSlot(itemLink)
+    local equippedItems = {}
+
+    -- Get the equip slot of the given item link
+    local _, _, _, _, _, _, _, _, equipSlot = C_Item.GetItemInfo(itemLink)
+
+    if not equipSlot then
+        return equippedItems
+    end
+
+    -- Function to add item from slot to array
+    local function AddItemFromSlot(slot)
+        local equippedItemLink = C_Item.GetInventoryItemLink("player", slot)
+        if equippedItemLink then
+            table.insert(equippedItems, equippedItemLink)
+        end
+    end
+
+    -- Check equip slot and handle special cases
+    if equipSlot == "INVTYPE_FINGER" then
+        AddItemFromSlot(11) -- Finger 1
+        AddItemFromSlot(12) -- Finger 2
+    elseif equipSlot == "INVTYPE_TRINKET" then
+        AddItemFromSlot(13) -- Trinket 1
+        AddItemFromSlot(14) -- Trinket 2
+    elseif equipSlot == "INVTYPE_WEAPON" or equipSlot == "INVTYPE_WEAPONMAINHAND" then
+        AddItemFromSlot(16) -- Main Hand
+        AddItemFromSlot(17) -- Off Hand
+    elseif equipSlot == "INVTYPE_SHIELD" or equipSlot == "INVTYPE_WEAPONOFFHAND" or equipSlot == "INVTYPE_HOLDABLE" then
+        AddItemFromSlot(17) -- Off Hand
+    else
+        -- Generic case for single slot items
+        local slotId = C_Item.GetInventorySlotInfo(equipSlot)
+        if slotId then
+            AddItemFromSlot(slotId)
+        end
+    end
+
+    return equippedItems
+end
+
 local function GetRewards()
 	local weeklyRewardsActivities = C_WeeklyRewards.GetActivities()
 
 	for i, activity in ipairs(weeklyRewardsActivities) do
 		if activity.rewards and #activity.rewards > 0 then
 			local itemDBID = activity.rewards[1].itemDBID
-			activity.rewards = { itemLink = C_WeeklyRewards.GetItemHyperlink(itemDBID) }
+			activity.rewards = { 
+				itemLink = C_WeeklyRewards.GetItemHyperlink(itemDBID),
+				equippedItems = GetEquippedItemsForSlot(itemLink)
+			}
 		else
 			activity.rewards =  {}
 		end

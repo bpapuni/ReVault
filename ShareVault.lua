@@ -356,17 +356,57 @@ function ShareVaultActivityMixin:OnEnter()
 	self:ShowPreviewItemTooltip();
 end
 
+-- Table to store created tooltips
+ShareVaultActivityMixin.equippedTooltips = {}
+
 function ShareVaultActivityMixin:ShowPreviewItemTooltip()
-	if not self.info.rewards.itemLink then return end
-	GameTooltip:SetOwner(self.ItemFrame, "ANCHOR_RIGHT", -3, -6);
-	GameTooltip:SetHyperlink(self.info.rewards.itemLink);
-	GameTooltip:Show();
+    if not self.info.rewards.itemLink then return end
+
+    local equippedItems = self.info.rewards.equippedItems
+    
+    -- Set up the main GameTooltip
+    GameTooltip:SetOwner(self.ItemFrame, "ANCHOR_RIGHT", -3, -6)
+    GameTooltip:SetHyperlink(self.info.rewards.itemLink)
+    GameTooltip:Show()
+
+    -- Initial offset for the equipped tooltips
+    local offsetX = GameTooltip:GetWidth() + 10  -- Adjust the initial offset based on GameTooltip width
+
+    -- Clear previously created tooltips
+    self:ClearEquippedTooltips()
+
+    -- Create and position equipped tooltips
+    for i, equippedItemLink in ipairs(equippedItems) do
+        local equippedTooltip = CreateFrame("GameTooltip", "EquippedTooltip"..i, UIParent, "GameTooltipTemplate")
+        equippedTooltip:SetOwner(UIParent, "ANCHOR_NONE")
+        equippedTooltip:SetPoint("TOPLEFT", GameTooltip, "TOPRIGHT", offsetX, 0)
+        equippedTooltip:SetHyperlink(equippedItemLink)
+        equippedTooltip:Show()
+        
+        -- Store the created tooltip
+        table.insert(self.equippedTooltips, equippedTooltip)
+        
+        -- Update offset for the next tooltip
+        offsetX = offsetX + equippedTooltip:GetWidth() + 10  -- Adjust spacing between tooltips
+    end
+end
+
+function ShareVaultActivityMixin:ClearEquippedTooltips()
+    -- Hide and clear the equipped tooltips
+    for _, tooltip in ipairs(self.equippedTooltips) do
+        tooltip:Hide()
+        tooltip:SetOwner(nil)  -- Detach from UIParent to avoid memory leaks
+    end
+    -- Reset the table
+    self.equippedTooltips = {}
 end
 
 function ShareVaultActivityMixin:OnLeave()
-	self.UpdateTooltip = nil;
-	GameTooltip:Hide();
+    self.UpdateTooltip = nil
+    GameTooltip:Hide()
+    self:ClearEquippedTooltips()
 end
+
 
 function ShareVaultActivityMixin:OnHide()
 	self.hasPendingSheenAnim = nil;
