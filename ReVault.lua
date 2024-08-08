@@ -1,5 +1,5 @@
 -- increment the index for each slash command
-SLASH_SV1 = "/sv"
+SLASH_RV1 = "/rv"
 
 -- define the corresponding slash command handler
 SlashCmdList.RV = function(msg, editBox)
