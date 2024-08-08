@@ -90,7 +90,7 @@ local function GetEquippedItemsForSlot(itemLink)
     local equippedItems = {}
 
     -- Get the equip slot of the given item link
-    local _, _, _, _, _, _, _, _, equipSlot = C_Item.GetItemInfo(itemLink)
+    local _, _, _, equipSlot = C_Item.GetItemInfoInstant(itemLink)
 
     if not equipSlot then
         return equippedItems
@@ -98,12 +98,12 @@ local function GetEquippedItemsForSlot(itemLink)
 
     -- Function to add item from slot to array
     local function AddItemFromSlot(slot)
-        local equippedItemLink = C_Item.GetInventoryItemLink("player", slot)
+        local equippedItemLink = GetInventoryItemLink("player", slot)
         if equippedItemLink then
             table.insert(equippedItems, equippedItemLink)
         end
     end
-
+	
     -- Check equip slot and handle special cases
     if equipSlot == "INVTYPE_FINGER" then
         AddItemFromSlot(11) -- Finger 1
@@ -118,7 +118,7 @@ local function GetEquippedItemsForSlot(itemLink)
         AddItemFromSlot(17) -- Off Hand
     else
         -- Generic case for single slot items
-        local slotId = C_Item.GetInventorySlotInfo(equipSlot)
+        local slotId = GetInventorySlotInfo(equipSlot)
         if slotId then
             AddItemFromSlot(slotId)
         end
@@ -131,17 +131,17 @@ local function GetRewards()
 	local weeklyRewardsActivities = C_WeeklyRewards.GetActivities()
 
 	for i, activity in ipairs(weeklyRewardsActivities) do
-		if activity.rewards and #activity.rewards > 0 then
+		if activity.rewards and #activity.rewards > 0 and i < 10 then
 			local itemDBID = activity.rewards[1].itemDBID
+			local rewardItemLink = C_WeeklyRewards.GetItemHyperlink(itemDBID)
 			activity.rewards = { 
-				itemLink = C_WeeklyRewards.GetItemHyperlink(itemDBID),
-				equippedItems = GetEquippedItemsForSlot(itemLink)
+				itemLink = rewardItemLink,
+				equippedItems = GetEquippedItemsForSlot(rewardItemLink)
 			}
 		else
 			activity.rewards =  {}
 		end
 	end
-	
 	return weeklyRewardsActivities;
 end
 

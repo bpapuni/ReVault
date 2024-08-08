@@ -72,7 +72,7 @@ end
 local function GetServerTime(timestamp)
     local localTime = date("%a %b %d %H:%M %Y", timestamp)
 
-    return localTime
+    return localTime;
 end
 
 function ShareVaultMixin:OnShow()
@@ -90,7 +90,7 @@ function ShareVaultMixin:OnShow()
 			checkForData:Cancel()
 		else
 			checkCount = checkCount + 1;
-			if (checkCount == 3) then
+			if (checkCount == 50) then
 				self.activities = ShareVaultData[self.owner];
 				self.timestamp = GetServerTime(self.activities.timestamp);
 				self.HeaderFrame.Text:SetText(self.owner.."'s Vault\nCurrent as of "..self.timestamp);
@@ -99,7 +99,7 @@ function ShareVaultMixin:OnShow()
 				self:FullRefresh();
 			end
 		end
-	end, 3)
+	end, 50)
 end
 
 function ShareVaultMixin:OnHide()
@@ -220,7 +220,7 @@ end
 
 ShareVaultOverlayMixin = {};
 
-local EVERGREEN_WEEKLY_REWARD_OVERLAY_EFFECT = { effectID = 179, offsetX = 3, offsetY = 0 };
+local EVERGREEN_WEEKLY_REWARD_OVERLAY_EFFECT = { effectID = 179, offsetX = 3, offsetY = -20 };
 
 function ShareVaultOverlayMixin:OnShow()
 	self.activeEffect = self.ModelScene:AddDynamicEffect(EVERGREEN_WEEKLY_REWARD_OVERLAY_EFFECT, self);
@@ -352,59 +352,46 @@ function ShareVaultActivityMixin:SetProgressText(text)
 	end
 end
 
+function ShareVaultActivityMixin:ShowPreviewItemTooltip()
+    if not self.info.rewards.itemLink then return end
+
+	local equippedItems = self.info.rewards.equippedItems;
+	
+	GameTooltip:SetOwner(self.ItemFrame, "ANCHOR_RIGHT", -3, -6);
+	GameTooltip:SetHyperlink(self.info.rewards.itemLink);
+	GameTooltip:Show();
+
+	local xOffset = 0;
+
+	for i, itemLink in ipairs(equippedItems) do
+		local equippedItemTooltip = _G["equippedItemTooltip"..i] or CreateFrame("GameTooltip", "equippedItemTooltip"..i, UIParent, "GameTooltipTemplate");
+		equippedItemTooltip:SetOwner(UIParent, "ANCHOR_NONE");
+        equippedItemTooltip:SetPoint("TOPLEFT", GameTooltip, "TOPRIGHT", -3 + xOffset, -10);
+		equippedItemTooltip:SetHyperlink(itemLink);
+		equippedItemTooltip:Show();
+
+		xOffset = xOffset + equippedItemTooltip:GetWidth();
+	end
+end
+
+function ShareVaultActivityMixin:HidePreviewItemTooltip()
+    if not self.info.rewards.itemLink then return end
+	
+	local equippedItems = self.info.rewards.equippedItems;
+	for i, _ in ipairs(equippedItems) do
+		local equippedItemTooltip = _G["equippedItemTooltip"..i]
+		equippedItemTooltip:Hide();
+	end
+	GameTooltip:Hide();
+end
+
+
 function ShareVaultActivityMixin:OnEnter()
 	self:ShowPreviewItemTooltip();
 end
 
--- Table to store created tooltips
-ShareVaultActivityMixin.equippedTooltips = {}
-
-function ShareVaultActivityMixin:ShowPreviewItemTooltip()
-    if not self.info.rewards.itemLink then return end
-
-    local equippedItems = self.info.rewards.equippedItems
-    
-    -- Set up the main GameTooltip
-    GameTooltip:SetOwner(self.ItemFrame, "ANCHOR_RIGHT", -3, -6)
-    GameTooltip:SetHyperlink(self.info.rewards.itemLink)
-    GameTooltip:Show()
-
-    -- Initial offset for the equipped tooltips
-    local offsetX = GameTooltip:GetWidth() + 10  -- Adjust the initial offset based on GameTooltip width
-
-    -- Clear previously created tooltips
-    self:ClearEquippedTooltips()
-
-    -- Create and position equipped tooltips
-    for i, equippedItemLink in ipairs(equippedItems) do
-        local equippedTooltip = CreateFrame("GameTooltip", "EquippedTooltip"..i, UIParent, "GameTooltipTemplate")
-        equippedTooltip:SetOwner(UIParent, "ANCHOR_NONE")
-        equippedTooltip:SetPoint("TOPLEFT", GameTooltip, "TOPRIGHT", offsetX, 0)
-        equippedTooltip:SetHyperlink(equippedItemLink)
-        equippedTooltip:Show()
-        
-        -- Store the created tooltip
-        table.insert(self.equippedTooltips, equippedTooltip)
-        
-        -- Update offset for the next tooltip
-        offsetX = offsetX + equippedTooltip:GetWidth() + 10  -- Adjust spacing between tooltips
-    end
-end
-
-function ShareVaultActivityMixin:ClearEquippedTooltips()
-    -- Hide and clear the equipped tooltips
-    for _, tooltip in ipairs(self.equippedTooltips) do
-        tooltip:Hide()
-        tooltip:SetOwner(nil)  -- Detach from UIParent to avoid memory leaks
-    end
-    -- Reset the table
-    self.equippedTooltips = {}
-end
-
 function ShareVaultActivityMixin:OnLeave()
-    self.UpdateTooltip = nil
-    GameTooltip:Hide()
-    self:ClearEquippedTooltips()
+	self:HidePreviewItemTooltip();
 end
 
 
@@ -416,23 +403,19 @@ end
 ShareVaultActivityItemMixin = { };
 
 function ShareVaultActivityItemMixin:OnEnter()
-	GameTooltip:SetOwner(self, "ANCHOR_RIGHT", -3, -6);
-	-- GameTooltip:SetOwner(self:GetParent(), "ANCHOR_RIGHT", -7, -11);
-	GameTooltip:SetHyperlink(self.itemLink);
-	self:SetScript("OnUpdate", self.OnUpdate);
+    self:GetParent():ShowPreviewItemTooltip();
 end
 
 function ShareVaultActivityItemMixin:OnLeave()
-	GameTooltip:Hide();
-	self:SetScript("OnUpdate", nil);
+    self:GetParent():HidePreviewItemTooltip();
 end
 
 function ShareVaultActivityItemMixin:OnUpdate()
-	if TooltipUtil.ShouldDoItemComparison() then
-		GameTooltip_ShowCompareItem(GameTooltip);
-	else
-		GameTooltip_HideShoppingTooltips(GameTooltip);
-	end
+	-- if TooltipUtil.ShouldDoItemComparison() then
+	-- 	GameTooltip_ShowCompareItem(GameTooltip);
+	-- else
+	-- 	GameTooltip_HideShoppingTooltips(GameTooltip);
+	-- end
 end
 
 function ShareVaultActivityItemMixin:OnClick()
