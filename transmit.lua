@@ -15,11 +15,11 @@ local function filterFunc(_, event, msg, player, l, cs, t, flag, channelId, ...)
 	local remaining = msg;
 	local done;
 	repeat
-		local start, finish, characterName = remaining:find("%[ShareVault: ([^%s]+)%'");
+		local start, finish, characterName = remaining:find("%[ReVault: ([^%s]+)%'");
 		if(characterName) then
 			characterName = characterName:gsub("|c[Ff][Ff]......", ""):gsub("|r", "");
 			newMsg = newMsg..remaining:sub(1, start-1);
-			newMsg = newMsg.."|Hgarrmission:sharevault:|h|cFFFFFF00["..characterName.."'s Vault]|h|r";
+			newMsg = newMsg.."|Hgarrmission:revault:|h|cFFFFFF00["..characterName.."'s Vault]|h|r";
 			remaining = remaining:sub(finish + 1);
 		else
 			done = true;
@@ -145,7 +145,7 @@ local function GetRewards()
 	return weeklyRewardsActivities;
 end
 
-Comm:RegisterComm("ShareVault", function(prefix, message, chattype, sender)
+Comm:RegisterComm("ReVault", function(prefix, message, chattype, sender)
 	local _, _, request = message:find("([^%s]+):request");
 	local _, _, response = message:find("response:([^%s]+)");
 	if chattype == "PARTY" or chattype == "RAID" then
@@ -160,15 +160,15 @@ Comm:RegisterComm("ShareVault", function(prefix, message, chattype, sender)
 			local serialized = LibSerialize:SerializeEx(configForLS, rewards);
 			local compressed = LibDeflate:CompressDeflate(serialized, configForDeflate);
 			local encoded = LibDeflate:EncodeForPrint(compressed);
-			crossRealmSendCommMessage("ShareVault", sender .. ":response:" .. encoded, sender)
+			crossRealmSendCommMessage("ReVault", sender .. ":response:" .. encoded, sender)
 		-- Player has received a response
 		elseif response and responseTarget == yourName.."-"..realm then
 			local decoded = LibDeflate:DecodeForPrint(response)
 			local decompressed = LibDeflate:DecompressDeflate(decoded)
 			local success, deserialized = LibSerialize:Deserialize(decompressed)
 			
-			ShareVaultFrame.activities = deserialized;
-			ShareVaultData[deserialized.owner] = deserialized;
+			ReVaultFrame.activities = deserialized;
+			ReVaultData[deserialized.owner] = deserialized;
 		end
 	else
 		if request then
@@ -185,27 +185,27 @@ Comm:RegisterComm("ShareVault", function(prefix, message, chattype, sender)
 			local decompressed = LibDeflate:DecompressDeflate(decoded)
 			local success, deserialized = LibSerialize:Deserialize(decompressed)
 
-			ShareVaultFrame.activities = deserialized;
-			ShareVaultData[deserialized.owner] = deserialized;
-			-- ShareVaultFrame:Show();
+			ReVaultFrame.activities = deserialized;
+			ReVaultData[deserialized.owner] = deserialized;
+			-- ReVaultFrame:Show();
 		end
 	end
 end)
 
 hooksecurefunc("SetItemRef", function(link, text)
 	local linkType, addon, payload = strsplit(":", link)
-	if linkType == "garrmission" and addon == "sharevault" then
-		local _, _, characterName = text:find("|Hgarrmission:sharevault:|h|cFFFFFF00%[([^%s]+)%'");
+	if linkType == "garrmission" and addon == "revault" then
+		local _, _, characterName = text:find("|Hgarrmission:revault:|h|cFFFFFF00%[([^%s]+)%'");
 		if(IsShiftKeyDown()) then
 			local editbox = GetCurrentKeyBoardFocus();
 			if(editbox) then
-				editbox:Insert("[ShareVault: " .. characterName .. "'s Vault]");
+				editbox:Insert("[ReVault: " .. characterName .. "'s Vault]");
 			end
 		else
-			ShareVaultFrame.owner = characterName;
-			ShareVaultFrame:Hide();
-			ShareVaultFrame:Show();
-			crossRealmSendCommMessage("ShareVault", characterName .. ":request", characterName)
+			ReVaultFrame.owner = characterName;
+			ReVaultFrame:Hide();
+			ReVaultFrame:Show();
+			crossRealmSendCommMessage("ReVault", characterName .. ":request", characterName)
 		end
 	end
 end)

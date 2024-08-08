@@ -1,8 +1,8 @@
 <Ui xmlns="http://www.blizzard.com/wow/ui/" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.blizzard.com/wow/ui/
 ..\..\..\..\..\WoW\Data\Interface\AddOns\Blizzard_SharedXML\UI.xsd">
-	<Script file="ShareVault.lua"/>
+	<Script file="ReVault.lua"/>
 
-	<Button name="ShareVaultActivityItemFrameTemplate" mixin="ShareVaultActivityItemMixin" virtual="true">
+	<Button name="ReVaultActivityItemFrameTemplate" mixin="ReVaultActivityItemMixin" virtual="true">
 		<Size x="155" y="49"/>
 		<Layers>
 			<Layer level="BACKGROUND">
@@ -42,7 +42,7 @@
 		</Scripts>
 	</Button>
 
-	<Frame name="ShareVaultActivityTypeTemplate" virtual="true">
+	<Frame name="ReVaultActivityTypeTemplate" virtual="true">
 		<Size x="326" y="131"/>
 		<Layers>
 			<Layer level="BACKGROUND">
@@ -70,7 +70,7 @@
 		</Layers>
 	</Frame>
 
-	<Frame name="ShareVaultActivityTemplate" parentArray="Activities" mixin="ShareVaultActivityMixin" virtual="true" frameLevel="200">
+	<Frame name="ReVaultActivityTemplate" parentArray="Activities" mixin="ReVaultActivityMixin" virtual="true" frameLevel="200">
 		<Size x="219" y="126"/>
 		<Layers>
 			<Layer level="BACKGROUND">
@@ -252,7 +252,7 @@
 					</Frame>
 				</Frames>
 			</Frame>
-			<Button parentKey="ItemFrame" inherits="ShareVaultActivityItemFrameTemplate" hidden="true" frameLevel="250">
+			<Button parentKey="ItemFrame" inherits="ReVaultActivityItemFrameTemplate" hidden="true" frameLevel="250">
 				<Anchors>
 					<Anchor point="CENTER" x="2" y="-7"/>
 				</Anchors>
@@ -367,9 +367,9 @@
 		</Scripts>
 	</Frame>
 
-	<Frame name="ShareVaultNineSliceTemplate" inherits="NineSlicePanelTemplate" setAllPoints="true" virtual="true"/>
+	<Frame name="ReVaultNineSliceTemplate" inherits="NineSlicePanelTemplate" setAllPoints="true" virtual="true"/>
 
-	<Frame name="ShareVaultOverlayTemplate" mixin="ShareVaultOverlayMixin" frameLevel="1250" virtual="true">
+	<Frame name="ReVaultOverlayTemplate" mixin="ReVaultOverlayMixin" frameLevel="1250" virtual="true">
 		<Size x="500" y="278"/>
 		<Layers>
 			<Layer level="BACKGROUND">
@@ -397,7 +397,7 @@
 			</Layer>
 		</Layers>
 		<Frames>
-			<Frame parentKey="NineSlice" inherits="ShareVaultNineSliceTemplate" frameLevel="2000"/>
+			<Frame parentKey="NineSlice" inherits="ReVaultNineSliceTemplate" frameLevel="2000"/>
 			<ModelScene parentKey="ModelScene" inherits="ScriptAnimatedModelSceneTemplate" setAllPoints="true" drawLayer="BACKGROUND" frameLevel="1500"/>
 			<Frame setAllPoints="true">
 				<Layers>
@@ -417,7 +417,7 @@
 		</Scripts>
 	</Frame>
 
-	<Frame name="ShareVaultFrame" mixin="ShareVaultMixin" parent="UIParent" hidden="true" enableMouse="true" toplevel="true" frameLevel="100">
+	<Frame name="ReVaultFrame" mixin="ReVaultMixin" parent="UIParent" hidden="true" enableMouse="true" toplevel="true" frameLevel="100">
 		<Size x="1165" y="657"/>
 		<Anchors>
 			<Anchor point="CENTER"/>
@@ -516,28 +516,28 @@
 					</Layer>
 				</Layers>
 			</Frame>
-			<Frame parentKey="RaidFrame" inherits="ShareVaultActivityTypeTemplate">
+			<Frame parentKey="RaidFrame" inherits="ReVaultActivityTypeTemplate">
 				<Anchors>
 					<Anchor point="TOPLEFT" x="68" y="-149"/>
 				</Anchors>
 			</Frame>
-			<Frame parentKey="MythicFrame" inherits="ShareVaultActivityTypeTemplate">
+			<Frame parentKey="MythicFrame" inherits="ReVaultActivityTypeTemplate">
 				<Anchors>
 					<Anchor point="TOPLEFT" x="68" y="-307"/>
 				</Anchors>
 			</Frame>
-			<Frame parentKey="PVPFrame" inherits="ShareVaultActivityTypeTemplate" hidden="true">
+			<Frame parentKey="PVPFrame" inherits="ReVaultActivityTypeTemplate" hidden="true">
 				<Anchors>
 					<Anchor point="TOPLEFT" x="68" y="-470"/>
 				</Anchors>
 			</Frame>
-			<Frame parentKey="WorldFrame" inherits="ShareVaultActivityTypeTemplate" hidden="true">
+			<Frame parentKey="WorldFrame" inherits="ReVaultActivityTypeTemplate" hidden="true">
 				<Anchors>
 					<Anchor point="TOPLEFT" x="68" y="-470"/>
 				</Anchors>
 			</Frame>
 			<ModelScene parentKey="ModelScene" inherits="ScriptAnimatedModelSceneTemplate" setAllPoints="true" drawLayer="BACKGROUND" frameLevel="300"/>
-			<Frame parentKey="ConcessionFrame" parentArray="Activities" mixin="ShareVaultConcessionMixin">
+			<Frame parentKey="ConcessionFrame" parentArray="Activities" mixin="ReVaultConcessionMixin">
 			</Frame>
 			<Button parentKey="CloseButton" inherits="UIPanelCloseButton" frameLevel="6000">
 				<Anchors>

@@ -2,14 +2,14 @@
 SLASH_SV1 = "/sv"
 
 -- define the corresponding slash command handler
-SlashCmdList.SV = function(msg, editBox)
-	ShareVault();
+SlashCmdList.RV = function(msg, editBox)
+	ReVault();
 end
 
-function ShareVault()
+function ReVault()
 	local characterName, realm = UnitFullName("player");
-	-- ShareVaultFrame:Show();
-	ChatFrame1:AddMessage("\124Hgarrmission:sharevault:\124h\124cFFFFFF00[".. characterName .. "-" .. realm .."'s Vault]\124h\124r");
+	-- ReVaultFrame:Show();
+	ChatFrame1:AddMessage("\124Hgarrmission:revault:\124h\124cFFFFFF00[".. characterName .. "-" .. realm .."'s Vault]\124h\124r");
 end
 
 local NUM_COLUMNS = 3;
@@ -17,9 +17,9 @@ local SELECTION_STATE_HIDDEN = 1;
 local SELECTION_STATE_UNSELECTED = 2;
 local SELECTION_STATE_SELECTED = 3;
 
-ShareVaultMixin = { };
+ReVaultMixin = { };
 
-function ShareVaultMixin:SetUpConditionalActivities()
+function ReVaultMixin:SetUpConditionalActivities()
 	self.showWorldRow = false;
 	local activities = C_WeeklyRewards.GetActivities();
 	for i, activityInfo in ipairs(activities) do
@@ -42,15 +42,15 @@ function ShareVaultMixin:SetUpConditionalActivities()
 	end
 end
 
-function ShareVaultMixin:OnLoad()
+function ReVaultMixin:OnLoad()
 	self:SetMovable(true)
 	self:EnableMouse(true)
     self:RegisterForDrag("LeftButton")
     self:SetScript("OnDragStart", self.StartMoving)
     self:SetScript("OnDragStop", self.StopMovingOrSizing)
 
-	if ShareVaultData == nil then
-        ShareVaultData = {
+	if ReVaultData == nil then
+        ReVaultData = {
         }
     end
 
@@ -66,7 +66,7 @@ function ShareVaultMixin:OnLoad()
 		allowOtherPanels = 1,
 		checkFit = 1,		
 	};
-	RegisterUIPanel(ShareVaultFrame, attributes);
+	RegisterUIPanel(ReVaultFrame, attributes);
 end
 
 local function GetServerTime(timestamp)
@@ -75,7 +75,7 @@ local function GetServerTime(timestamp)
     return localTime;
 end
 
-function ShareVaultMixin:OnShow()
+function ReVaultMixin:OnShow()
 	PlaySound(SOUNDKIT.UI_WEEKLY_REWARD_OPEN_WINDOW);
 	local checkCount = 0;
 	local checkForData;
@@ -91,7 +91,7 @@ function ShareVaultMixin:OnShow()
 		else
 			checkCount = checkCount + 1;
 			if (checkCount == 3) then
-				self.activities = ShareVaultData[self.owner];
+				self.activities = ReVaultData[self.owner];
 				self.timestamp = GetServerTime(self.activities.timestamp);
 				self.HeaderFrame.Text:SetText(self.owner.."'s Vault\nCurrent as of "..self.timestamp);
 				self.Blackout:SetShown(false);
@@ -102,13 +102,13 @@ function ShareVaultMixin:OnShow()
 	end, 3)
 end
 
-function ShareVaultMixin:OnHide()
+function ReVaultMixin:OnHide()
 	PlaySound(SOUNDKIT.UI_WEEKLY_REWARD_CLOSE_WINDOW);
 	self.activities = nil;
 	self.selectedActivity = nil;
 end
 
-function ShareVaultMixin:SetUpActivity(activityTypeFrame, name, atlas, activityType)
+function ReVaultMixin:SetUpActivity(activityTypeFrame, name, atlas, activityType)
 	activityTypeFrame.Name:SetText(name);
 	local useAtlasSize = true;
 	activityTypeFrame.Background:SetAtlas(atlas, useAtlasSize);
@@ -120,7 +120,7 @@ function ShareVaultMixin:SetUpActivity(activityTypeFrame, name, atlas, activityT
 			alreadyCreatedFrame:Show();
 			prevFrame = alreadyCreatedFrame;
 		else
-			local frame = CreateFrame("FRAME", nil, self, "ShareVaultActivityTemplate");
+			local frame = CreateFrame("FRAME", nil, self, "ReVaultActivityTemplate");
 			if prevFrame then
 				frame:SetPoint("LEFT", prevFrame, "RIGHT", 9, 0);
 			else
@@ -134,7 +134,7 @@ function ShareVaultMixin:SetUpActivity(activityTypeFrame, name, atlas, activityT
 	end
 end
 
-function ShareVaultMixin:SetActivityShown(isShown, activityTypeFrame, activityType)
+function ReVaultMixin:SetActivityShown(isShown, activityTypeFrame, activityType)
 	activityTypeFrame:SetShown(isShown);
 	for i = 1, NUM_COLUMNS do
 		local alreadyCreatedFrame = self:GetActivityFrame(activityType, i);
@@ -144,7 +144,7 @@ function ShareVaultMixin:SetActivityShown(isShown, activityTypeFrame, activityTy
 	end
 end
 
-function ShareVaultMixin:GetActivityFrame(activityType, index)
+function ReVaultMixin:GetActivityFrame(activityType, index)
 	for i, frame in ipairs(self.Activities) do
 		if frame.type == activityType and frame.index == index then
 			return frame;
@@ -152,13 +152,13 @@ function ShareVaultMixin:GetActivityFrame(activityType, index)
 	end
 end
 
-function ShareVaultMixin:FullRefresh()
+function ReVaultMixin:FullRefresh()
 	-- for preview item tooltips
 	C_MythicPlus.RequestMapInfo();
 	self:Refresh(true);
 end
 
-function ShareVaultMixin:Refresh(playSheenAnims)
+function ReVaultMixin:Refresh(playSheenAnims)
 	local activities = self.activities or C_WeeklyRewards.GetActivities();
 	self.ConcessionFrame:Hide();
 	self:UpdateSelection();
@@ -182,13 +182,13 @@ function ShareVaultMixin:Refresh(playSheenAnims)
 	self:SetHeight(657);
 end
 
-function ShareVaultMixin:GetOrCreateOverlay()
+function ReVaultMixin:GetOrCreateOverlay()
 	if self.Overlay then
 		self.Overlay.Title:SetText("Loading "..self.owner.."'s Great Vault");
 		return self.Overlay;
 	end
 
-	self.Overlay = CreateFrame("Frame", nil, self, "ShareVaultOverlayTemplate");
+	self.Overlay = CreateFrame("Frame", nil, self, "ReVaultOverlayTemplate");
 	self.Overlay:SetPoint("TOP", self, "TOP", 0, -142);
 	RaiseFrameLevel(self.Overlay);
 	self.Overlay.Title:SetText("Loading "..self.owner.."'s Great Vault");
@@ -196,7 +196,7 @@ function ShareVaultMixin:GetOrCreateOverlay()
 	return self.Overlay;
 end
 
-function ShareVaultMixin:UpdateSelection()
+function ReVaultMixin:UpdateSelection()
     local selectedActivity = self.selectedActivity;
 
     for i, frame in ipairs(self.Activities) do
@@ -214,41 +214,41 @@ function ShareVaultMixin:UpdateSelection()
     end
 end
 
-function ShareVaultMixin:GetSelectedActivityInfo()
+function ReVaultMixin:GetSelectedActivityInfo()
 	return self.selectedActivity and self.selectedActivity.info;
 end
 
-ShareVaultOverlayMixin = {};
+ReVaultOverlayMixin = {};
 
 local EVERGREEN_WEEKLY_REWARD_OVERLAY_EFFECT = { effectID = 179, offsetX = 3, offsetY = -20 };
 
-function ShareVaultOverlayMixin:OnShow()
+function ReVaultOverlayMixin:OnShow()
 	self.activeEffect = self.ModelScene:AddDynamicEffect(EVERGREEN_WEEKLY_REWARD_OVERLAY_EFFECT, self);
 	NineSliceUtil.ApplyLayoutByName(self.NineSlice, "Dialog");
 end
 
-function ShareVaultOverlayMixin:OnHide()
+function ReVaultOverlayMixin:OnHide()
 	if self.activeEffect then
 		self.activeEffect:CancelEffect();
 		self.activeEffect = nil;
 	end
 end
 
-ShareVaultActivityMixin = { };
+ReVaultActivityMixin = { };
 
-function ShareVaultActivityMixin:SetSelectionState(state)
+function ReVaultActivityMixin:SetSelectionState(state)
 	self.SelectedTexture:SetShown(state == SELECTION_STATE_SELECTED);
 	self.SelectionGlow:SetShown(state == SELECTION_STATE_SELECTED);
 	self.UnselectedFrame:SetShown(state == SELECTION_STATE_UNSELECTED);
 end
 
-function ShareVaultActivityMixin:MarkForPendingSheenAnim()
+function ReVaultActivityMixin:MarkForPendingSheenAnim()
 	self.hasPendingSheenAnim = true;
 end
 
 local GENERATED_REWARD_MODEL_SCENE_EFFECT = { effectID = 179, offsetX = -35, offsetY = -15};
 local GENERATED_REWARD_MODEL_SCENE_EFFECT_DECAY = { effectID = 180, offsetX = -36, offsetY = -5};
-function ShareVaultActivityMixin:Refresh(activityInfo)
+function ReVaultActivityMixin:Refresh(activityInfo)
 	local thresholdString;
 	if activityInfo.type == Enum.WeeklyRewardChestThresholdType.Raid then
 		thresholdString = activityInfo.raidString;
@@ -321,7 +321,7 @@ function ShareVaultActivityMixin:Refresh(activityInfo)
 	end
 end
 
-function ShareVaultActivityMixin:SetActiveEffect(effectInfo)
+function ReVaultActivityMixin:SetActiveEffect(effectInfo)
 	if effectInfo == self.activeEffectInfo then
 		return;
 	end
@@ -338,11 +338,11 @@ function ShareVaultActivityMixin:SetActiveEffect(effectInfo)
 	end
 end
 
-function ShareVaultActivityMixin:ClearActiveEffect()
+function ReVaultActivityMixin:ClearActiveEffect()
 	self:SetActiveEffect(nil);
 end
 
-function ShareVaultActivityMixin:SetProgressText(text)
+function ReVaultActivityMixin:SetProgressText(text)
 	local activityInfo = self.info;
 	if text then
 		self.Progress:SetText(text);
@@ -352,7 +352,7 @@ function ShareVaultActivityMixin:SetProgressText(text)
 	end
 end
 
-function ShareVaultActivityMixin:ShowPreviewItemTooltip()
+function ReVaultActivityMixin:ShowPreviewItemTooltip()
     if not self.info.rewards.itemLink then return end
 
 	local equippedItems = self.info.rewards.equippedItems;
@@ -377,7 +377,7 @@ function ShareVaultActivityMixin:ShowPreviewItemTooltip()
     end
 end
 
-function ShareVaultActivityMixin:HidePreviewItemTooltip()
+function ReVaultActivityMixin:HidePreviewItemTooltip()
     if not self.info.rewards.itemLink then return end
 
 	local equippedItems = self.info.rewards.equippedItems;
@@ -389,31 +389,31 @@ function ShareVaultActivityMixin:HidePreviewItemTooltip()
 end
 
 
-function ShareVaultActivityMixin:OnEnter()
+function ReVaultActivityMixin:OnEnter()
 	self:ShowPreviewItemTooltip();
 end
 
-function ShareVaultActivityMixin:OnLeave()
+function ReVaultActivityMixin:OnLeave()
 	self:HidePreviewItemTooltip();
 end
 
 
-function ShareVaultActivityMixin:OnHide()
+function ReVaultActivityMixin:OnHide()
 	self.hasPendingSheenAnim = nil;
 	self:ClearActiveEffect();
 end
 
-ShareVaultActivityItemMixin = { };
+ReVaultActivityItemMixin = { };
 
-function ShareVaultActivityItemMixin:OnEnter()
+function ReVaultActivityItemMixin:OnEnter()
     self:GetParent():ShowPreviewItemTooltip();
 end
 
-function ShareVaultActivityItemMixin:OnLeave()
+function ReVaultActivityItemMixin:OnLeave()
     self:GetParent():HidePreviewItemTooltip();
 end
 
-function ShareVaultActivityItemMixin:OnUpdate()
+function ReVaultActivityItemMixin:OnUpdate()
 	-- if TooltipUtil.ShouldDoItemComparison() then
 	-- 	GameTooltip_ShowCompareItem(GameTooltip);
 	-- else
@@ -421,14 +421,14 @@ function ShareVaultActivityItemMixin:OnUpdate()
 	-- end
 end
 
-function ShareVaultActivityItemMixin:OnClick()
+function ReVaultActivityItemMixin:OnClick()
 	local activityFrame = self:GetParent();
 	if IsModifiedClick() then
 		HandleModifiedItemClick(self.itemLink);
 	end
 end
 
-function ShareVaultActivityItemMixin:SetDisplayedItem()
+function ReVaultActivityItemMixin:SetDisplayedItem()
 	self.itemLink = self:GetParent().info.rewards.itemLink;
 	local itemName, itemLink, itemQuality, itemLevel, itemMinLevel, itemType, itemSubType, itemStackCount, itemEquipLoc, itemIcon = C_Item.GetItemInfo(self.itemLink);
 	self.Name:SetText(itemName);
@@ -440,7 +440,7 @@ function ShareVaultActivityItemMixin:SetDisplayedItem()
 	self:SetShown(true);
 end
 
-function ShareVaultActivityItemMixin:SetRewards(itemLink)
+function ReVaultActivityItemMixin:SetRewards(itemLink)
 	local itemId = tonumber(itemLink:match("Hitem:(%d+):"));
 	local continuableContainer = ContinuableContainer:Create();
 	local item = Item:CreateFromItemID(itemId);
@@ -451,7 +451,7 @@ function ShareVaultActivityItemMixin:SetRewards(itemLink)
 	end);
 end
 
-ShareVaultConcessionMixin = { };
+ReVaultConcessionMixin = { };
 
-tinsert(UISpecialFrames, "ShareVaultFrame")
-UIPanelWindows["ShareVaultFrame"] = nil
+tinsert(UISpecialFrames, "ReVaultFrame")
+UIPanelWindows["ReVaultFrame"] = nil

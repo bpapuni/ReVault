@@ -1,0 +1,11 @@
+## Interface: 110002
+## Author: Papwnee-Frostmourne
+## Title: ReVault
+## Version: v1.0.0
+## Notes: |cff36e5ffShare your vault.|r
+
+## SavedVariables: ReVaultData
+
+embeds.xml
+ReVault.xml
+transmit.lua
