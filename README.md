@@ -8,5 +8,5 @@ ReVault is a World of Warcraft addon designed to share the contents of your Grea
 
 1. **Generate a Link to Your Vault:** Type /rv to generate a link to your vault.
 2. **Share Your Vault Contents:** Shift+click the link and share it in chat as you would any other in-game link.
-3. **...** 
+3. **???** 
 4. **Profit:** Others with the addon will be able to open the link to view the contents of your Great Vault
