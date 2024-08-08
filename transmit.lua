@@ -82,8 +82,7 @@ local function crossRealmSendCommMessage(prefix, text, target)
 			-- text = ("%s:%s"):format(target, text)
 		end
 	end
-	-- local success = C_ChatInfo.SendAddonMessage("ShareVault", "a", "WHISPER", "Fiftyboost-Frostmourne")
-	-- print("Online: "..tostring(success));
+	
 	Comm:SendCommMessage(prefix, text, chattype, target)
 end
 
@@ -113,7 +112,7 @@ Comm:RegisterComm("ShareVault", function(prefix, message, chattype, sender)
 		if request and requestTarget == yourName.."-"..realm then
 			local rewards = GetRewards();
 			rewards.owner = requestTarget;
-			rewards.timestamp = GetTime();
+			rewards.timestamp = time();
 			local serialized = LibSerialize:SerializeEx(configForLS, rewards);
 			local compressed = LibDeflate:CompressDeflate(serialized, configForDeflate);
 			local encoded = LibDeflate:EncodeForPrint(compressed);
@@ -126,17 +125,13 @@ Comm:RegisterComm("ShareVault", function(prefix, message, chattype, sender)
 			
 			ShareVaultFrame.activities = deserialized;
 			ShareVaultData[deserialized.owner] = deserialized;
-			-- ShareVaultFrame:Show();
-		-- TODO Detect if no response
-		-- elseif request ~= nil and response == nil then
-		-- 	print(response)
 		end
 	else
 		if request then
 			local rewards = GetRewards();
 			local yourName, realm = UnitFullName("player");
 			rewards.owner = yourName.."-"..realm;
-			rewards.timestamp = GetTime();
+			rewards.timestamp = time();
 			local serialized = LibSerialize:SerializeEx(configForLS, rewards);
 			local compressed = LibDeflate:CompressDeflate(serialized, configForDeflate);
 			local encoded = LibDeflate:EncodeForPrint(compressed);

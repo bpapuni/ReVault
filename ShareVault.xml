@@ -383,7 +383,7 @@
 			<Layer level="ARTWORK">
 				<FontString parentKey="Title" inherits="SystemFont_Large" justifyH="CENTER" text="WEEKLY_REWARDS_UNCLAIMED_TITLE">
 					<Anchors>
-						<Anchor point="TOP" x="0" y="-46"/>
+						<Anchor point="TOP" x="0" y="-66"/>
 					</Anchors>
 					<Color color="GREEN_FONT_COLOR"/>
 				</FontString>

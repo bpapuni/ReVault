@@ -69,20 +69,33 @@ function ShareVaultMixin:OnLoad()
 	RegisterUIPanel(ShareVaultFrame, attributes);
 end
 
+local function GetServerTime(timestamp)
+    local localTime = date("%a %b %d %H:%M %Y", timestamp)
+
+    return localTime
+end
+
 function ShareVaultMixin:OnShow()
 	PlaySound(SOUNDKIT.UI_WEEKLY_REWARD_OPEN_WINDOW);
 	local checkCount = 0;
 	local checkForData;
 	self.Blackout:SetShown(true);
+	self:GetOrCreateOverlay():Show();
 	checkForData = C_Timer.NewTicker(1, function()
 		if self.activities then
+			self.HeaderFrame.Text:SetText(self.owner.."'s Vault");
 			self.Blackout:SetShown(false);
+			self.Overlay:Hide();
 			self:FullRefresh();
 			checkForData:Cancel()
 		else
 			checkCount = checkCount + 1;
 			if (checkCount == 3) then
-				self.activities = ShareVaultData[self.owner]
+				self.activities = ShareVaultData[self.owner];
+				self.timestamp = GetServerTime(self.activities.timestamp);
+				self.HeaderFrame.Text:SetText(self.owner.."'s Vault\nCurrent as of "..self.timestamp);
+				self.Blackout:SetShown(false);
+				self.Overlay:Hide();
 				self:FullRefresh();
 			end
 		end
@@ -147,8 +160,6 @@ end
 
 function ShareVaultMixin:Refresh(playSheenAnims)
 	local activities = self.activities or C_WeeklyRewards.GetActivities();
-
-	self.HeaderFrame.Text:SetText(self.owner.."'s Vault");
 	self.ConcessionFrame:Hide();
 	self:UpdateSelection();
 
@@ -171,31 +182,17 @@ function ShareVaultMixin:Refresh(playSheenAnims)
 	self:SetHeight(657);
 end
 
-function ShareVaultMixin:UpdateOverlay()
-	local show = self:ShouldShowOverlay();
-
-	if self:ShouldShowOverlay() then
-		self:GetOrCreateOverlay():Show();
-	elseif self.Overlay then
-		self.Overlay:Hide();
-	end
-
-	self.Blackout:SetShown(show);
-end
-
-function ShareVaultMixin:ShouldShowOverlay()
-	return self:IsReadOnly() and C_WeeklyRewards.HasAvailableRewards();
-end
-
 function ShareVaultMixin:GetOrCreateOverlay()
 	if self.Overlay then
+		self.Overlay.Title:SetText("Loading "..self.owner.."'s Great Vault");
 		return self.Overlay;
 	end
 
 	self.Overlay = CreateFrame("Frame", nil, self, "ShareVaultOverlayTemplate");
 	self.Overlay:SetPoint("TOP", self, "TOP", 0, -142);
 	RaiseFrameLevel(self.Overlay);
-
+	self.Overlay.Title:SetText("Loading "..self.owner.."'s Great Vault");
+	self.Overlay.Text:SetText("");
 	return self.Overlay;
 end
 
