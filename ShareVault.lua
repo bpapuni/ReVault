@@ -90,7 +90,7 @@ function ShareVaultMixin:OnShow()
 			checkForData:Cancel()
 		else
 			checkCount = checkCount + 1;
-			if (checkCount == 50) then
+			if (checkCount == 3) then
 				self.activities = ShareVaultData[self.owner];
 				self.timestamp = GetServerTime(self.activities.timestamp);
 				self.HeaderFrame.Text:SetText(self.owner.."'s Vault\nCurrent as of "..self.timestamp);
@@ -99,7 +99,7 @@ function ShareVaultMixin:OnShow()
 				self:FullRefresh();
 			end
 		end
-	end, 50)
+	end, 3)
 end
 
 function ShareVaultMixin:OnHide()
@@ -356,30 +356,33 @@ function ShareVaultActivityMixin:ShowPreviewItemTooltip()
     if not self.info.rewards.itemLink then return end
 
 	local equippedItems = self.info.rewards.equippedItems;
-	
+
 	GameTooltip:SetOwner(self.ItemFrame, "ANCHOR_RIGHT", -3, -6);
 	GameTooltip:SetHyperlink(self.info.rewards.itemLink);
 	GameTooltip:Show();
 
-	local xOffset = 0;
-
 	for i, itemLink in ipairs(equippedItems) do
-		local equippedItemTooltip = _G["equippedItemTooltip"..i] or CreateFrame("GameTooltip", "equippedItemTooltip"..i, UIParent, "GameTooltipTemplate");
-		equippedItemTooltip:SetOwner(UIParent, "ANCHOR_NONE");
-        equippedItemTooltip:SetPoint("TOPLEFT", GameTooltip, "TOPRIGHT", -3 + xOffset, -10);
-		equippedItemTooltip:SetHyperlink(itemLink);
-		equippedItemTooltip:Show();
-
-		xOffset = xOffset + equippedItemTooltip:GetWidth();
-	end
+        -- Use built-in ShoppingTooltip1 and ShoppingTooltip2 for comparisons
+        if i == 1 then
+            ShoppingTooltip1:SetOwner(GameTooltip, "ANCHOR_NONE");
+            ShoppingTooltip1:SetPoint("TOPLEFT", GameTooltip, "TOPRIGHT", 0, 0);
+            ShoppingTooltip1:SetHyperlink(itemLink);
+            ShoppingTooltip1:Show();
+        elseif i == 2 then
+            ShoppingTooltip2:SetOwner(GameTooltip, "ANCHOR_NONE");
+            ShoppingTooltip2:SetPoint("TOPLEFT", ShoppingTooltip1, "TOPRIGHT", 0, 0);
+            ShoppingTooltip2:SetHyperlink(itemLink);
+            ShoppingTooltip2:Show();
+        end
+    end
 end
 
 function ShareVaultActivityMixin:HidePreviewItemTooltip()
     if not self.info.rewards.itemLink then return end
-	
+
 	local equippedItems = self.info.rewards.equippedItems;
 	for i, _ in ipairs(equippedItems) do
-		local equippedItemTooltip = _G["equippedItemTooltip"..i]
+		local equippedItemTooltip = _G["ShoppingTooltip"..i]
 		equippedItemTooltip:Hide();
 	end
 	GameTooltip:Hide();

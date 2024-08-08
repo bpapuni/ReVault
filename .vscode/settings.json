@@ -98,7 +98,9 @@
         "UIPanelWindows",
         "ShowMacroFrame",
         "WeeklyRewardsMixin",
-        "message"
+        "message",
+        "ShoppingTooltip1",
+        "ShoppingTooltip2"
     ],
     "Lua.runtime.version": "Lua 5.1",
     "Lua.runtime.builtin": {
