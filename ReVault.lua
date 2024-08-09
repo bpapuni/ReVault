@@ -56,7 +56,6 @@ function ReVaultMixin:OnLoad()
 
 	self:SetUpActivity(self.RaidFrame, RAIDS, "evergreen-weeklyrewards-category-raids", Enum.WeeklyRewardChestThresholdType.Raid);
 	self:SetUpActivity(self.MythicFrame, DUNGEONS, "evergreen-weeklyrewards-category-dungeons", Enum.WeeklyRewardChestThresholdType.Activities);
-
 	self:SetUpConditionalActivities();
 
 	local attributes =
@@ -352,8 +351,80 @@ function ReVaultActivityMixin:SetProgressText(text)
 	end
 end
 
+local function FormatNumberWithCommas(number)
+	local k;
+    local formatted = tostring(number)
+    while true do  
+        formatted, k = string.gsub(formatted, "^(-?%d+)(%d%d%d)", '%1,%2')
+        if (k==0) then
+            break
+        end
+    end
+    return formatted
+end
+
+local function GetItemStats(itemLink)
+    local stats = C_Item.GetItemStats(itemLink)
+    local dps = C_Item.GetDetailedItemLevelInfo(itemLink)
+    return {
+        ["Damage Per Second"] = dps,
+        ["Armor"] = stats["ITEM_MOD_ARMOR_SHORT"] or 0,
+        ["Strength"] = stats["ITEM_MOD_STRENGTH_SHORT"] or 0,
+        ["Agility"] = stats["ITEM_MOD_AGILITY_SHORT"] or 0,
+        ["Intellect"] = stats["ITEM_MOD_INTELLECT_SHORT"] or 0,
+        ["Stamina"] = stats["ITEM_MOD_STAMINA_SHORT"] or 0,
+        ["Critical Strike"] = stats["ITEM_MOD_CRIT_RATING_SHORT"] or 0,
+        ["Haste"] = stats["ITEM_MOD_HASTE_RATING_SHORT"] or 0,
+        ["Versatility"] = stats["ITEM_MOD_VERSATILITY"] or 0,
+        ["Mastery"] = stats["ITEM_MOD_MASTERY_RATING_SHORT"] or 0,
+        ["Prismatic Socket"] = stats["EMPTY_SOCKET_PRISMATIC"] or 0
+    }
+end
+
+local function AddItemComparison(tooltip, rewardItemLink, equippedItemLink)
+    local statOrder = {
+        "Damage Per Second",
+        "Armor",
+        "Strength",
+        "Agility",
+        "Intellect",
+        "Stamina",
+        "Critical Strike",
+        "Haste",
+        "Versatility",
+        "Mastery",
+        "Prismatic Socket"
+    }
+    
+    local socketIcon = "|TInterface\\ItemSocketingFrame\\UI-EmptySocket-Prismatic:13|t  "
+    local rewardItemStats = GetItemStats(rewardItemLink)
+    local equippedItemStats = GetItemStats(equippedItemLink)
+    
+    local statDifference = {}
+    for _, stat in ipairs(statOrder) do
+        statDifference[stat] = rewardItemStats[stat] - equippedItemStats[stat]
+    end
+    
+    tooltip:AddLine("\nIf you replace this item, the following stat changes will occur:\n", 1, 0.87, 0, true)
+    local _, _, _, equipSlot = C_Item.GetItemInfoInstant(rewardItemLink)
+    
+    for _, stat in ipairs(statOrder) do
+        local value = statDifference[stat]
+        local isDPS = stat == "Damage Per Second"
+        local isSocket = stat == "Prismatic Socket"
+        local prefix = value > 0 and "+" or ""
+        local color = value < 0 and RED_FONT_COLOR or (value > 0 and GREEN_FONT_COLOR or WHITE_FONT_COLOR)
+        
+        if (not isDPS or (equipSlot == "INVTYPE_WEAPON" or equipSlot == "INVTYPE_WEAPONMAINHAND")) and value ~= 0 then
+            tooltip:AddLine(color:GenerateHexColorMarkup() .. prefix .. FormatNumberWithCommas(value) .. "|r " ..
+                            (isSocket and socketIcon or "") .. WHITE_FONT_COLOR:GenerateHexColorMarkup() .. stat .. "|r")
+        end
+    end
+end
+
 function ReVaultActivityMixin:ShowPreviewItemTooltip()
-    if not self.info.rewards.itemLink then return end
+	local rewardItemLink = self.info.rewards.itemLink;
+    if not rewardItemLink then return end
 
 	local equippedItems = self.info.rewards.equippedItems;
 
@@ -361,17 +432,24 @@ function ReVaultActivityMixin:ShowPreviewItemTooltip()
 	GameTooltip:SetHyperlink(self.info.rewards.itemLink);
 	GameTooltip:Show();
 
-	for i, itemLink in ipairs(equippedItems) do
-        -- Use built-in ShoppingTooltip1 and ShoppingTooltip2 for comparisons
+	for i, equippedItemLink in ipairs(equippedItems) do
         if i == 1 then
             ShoppingTooltip1:SetOwner(GameTooltip, "ANCHOR_NONE");
-            ShoppingTooltip1:SetPoint("TOPLEFT", GameTooltip, "TOPRIGHT", 0, 0);
-            ShoppingTooltip1:SetHyperlink(itemLink);
+            ShoppingTooltip1:SetPoint("TOPLEFT", GameTooltip, "TOPRIGHT", 0, -10);
+			ShoppingTooltip1:SetWidth(GameTooltip:GetWidth());
+            ShoppingTooltip1:SetHyperlink(equippedItemLink);
+			AddItemComparison(ShoppingTooltip1, rewardItemLink, equippedItemLink);
+			-- ShoppingTooltip1:AddLine("\nIf you replace this item, the following stat changes will occur:\n", 1, 1, 0, true);
+			-- ShoppingTooltip1:AddLine(GetStatDifferences(rewardItemLink, equippedItemLink));
             ShoppingTooltip1:Show();
         elseif i == 2 then
             ShoppingTooltip2:SetOwner(GameTooltip, "ANCHOR_NONE");
             ShoppingTooltip2:SetPoint("TOPLEFT", ShoppingTooltip1, "TOPRIGHT", 0, 0);
-            ShoppingTooltip2:SetHyperlink(itemLink);
+			ShoppingTooltip2:SetWidth(GameTooltip:GetWidth());
+            ShoppingTooltip2:SetHyperlink(equippedItemLink);
+			AddItemComparison(ShoppingTooltip2, rewardItemLink, equippedItemLink);
+			-- ShoppingTooltip2:AddLine("\nIf you replace this item, the following stat changes will occur:\n", 1, 1, 0, true);
+			-- ShoppingTooltip2:AddLine(GetStatDifferences(rewardItemLink, equippedItemLink));
             ShoppingTooltip2:Show();
         end
     end

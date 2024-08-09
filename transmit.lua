@@ -90,7 +90,7 @@ local function GetEquippedItemsForSlot(itemLink)
     local equippedItems = {}
 
     -- Get the equip slot of the given item link
-    local _, _, _, equipSlot = C_Item.GetItemInfoInstant(itemLink)
+    local _, _, _, equipSlot = C_Item.GetItemInfoInstant(itemLink);
 
     if not equipSlot then
         return equippedItems
@@ -98,9 +98,9 @@ local function GetEquippedItemsForSlot(itemLink)
 
     -- Function to add item from slot to array
     local function AddItemFromSlot(slot)
-        local equippedItemLink = GetInventoryItemLink("player", slot)
+        local equippedItemLink = GetInventoryItemLink("player", slot);
         if equippedItemLink then
-            table.insert(equippedItems, equippedItemLink)
+            table.insert(equippedItems, equippedItemLink);
         end
     end
 	
