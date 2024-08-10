@@ -29,15 +29,15 @@ reVaultShareButton:SetScript("OnClick", function(self)
     ReVault(true);
 end)
 
-local expansion = C_WeeklyRewards.GetWeeklyRewardTextureKit();
 local reVaultShareButtonBackground = reVaultShareButton:CreateTexture("$parentBackground", "BACKGROUND", nil, -1);
-if expansion == "Dragonflight" then
+-- if still Dragonflight
+if GetExpansionLevel() == 9 then
 	reVaultShareButtonBackground:SetAtlas("dragonflight-weeklyrewards-frame-button", true);
 	reVaultShareButtonBackground:SetPoint("CENTER", -3, 0);
 else
 	reVaultShareButtonBackground:SetAtlas("evergreen-weeklyrewards-frame-selectbutton", true);
 	reVaultShareButtonBackground:SetPoint("CENTER", 0, 0);
-end
+end	
 
 function ReVault(insertToEditbox)
 	local characterName, realm = UnitFullName("player");
