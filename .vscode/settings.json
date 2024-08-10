@@ -101,7 +101,16 @@
         "message",
         "ShoppingTooltip1",
         "ShoppingTooltip2",
-        "Add"
+        "Add",
+        "ActionButtonUtil",
+        "GameTooltip_Hide",
+        "QuickKeybindButtonTemplateMixin",
+        "UnregisterStateDriver",
+        "KeybindFrames_InQuickKeybindMode",
+        "RegisterStateDriver",
+        "WEEKLY_REWARDS_SELECT_REWARD",
+        "ChatFrame1EditBox",
+        "ItemRefTooltip"
     ],
     "Lua.runtime.version": "Lua 5.1",
     "Lua.runtime.builtin": {
