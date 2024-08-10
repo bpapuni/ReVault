@@ -9,4 +9,11 @@ ReVault is a World of Warcraft addon designed to share the contents of your Grea
 3. **???** 
 4. **Profit:** Others with the addon will be able to open the link to view the rewards in your Great Vault, and your current gear that each reward would replace.
 
-![ReVault screenshot 1](/Screenshots/screenshot-1.png)![ReVault screenshot 2](/Screenshots/screenshot-2.png)
+![ReVault screenshot 1](/Screenshots/screenshot-1.png)
+*Click the "Share with ReVault" button in your Great Vault to generate a link to your vault.*
+
+![ReVault screenshot 2](/Screenshots/screenshot-2.png)
+*Or type /rv*
+
+![ReVault screenshot 3](/Screenshots/screenshot-3.png)
+*Others with the addon will be able to open the link to view the rewards in your Great Vault, and your current gear that each reward would replace.*
