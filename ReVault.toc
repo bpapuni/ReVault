@@ -2,8 +2,9 @@
 ## Author: Papwnee-Frostmourne
 ## Title: ReVault
 ## Version: v1.0.0
-## Notes: |cff36e5ffShare your vault.|r
+## Notes: Share the contents of your Great Vault
 
+## IconTexture: Interface\Addons\ReVault\icon
 ## SavedVariables: ReVaultData
 
 embeds.xml

@@ -1,15 +1,53 @@
--- increment the index for each slash command
+C_AddOns.LoadAddOn("Blizzard_WeeklyRewards");
+
 SLASH_RV1 = "/rv"
 
--- define the corresponding slash command handler
 SlashCmdList.RV = function(msg, editBox)
 	ReVault();
 end
 
-function ReVault()
+local selectRewardButton = WeeklyRewardsFrame.SelectRewardButton;
+local point, relativeTo, relativePoint, x, y = selectRewardButton:GetPoint();
+selectRewardButton:SetPoint(point, relativeTo, relativePoint, x - 108, y)
+
+local reVaultShareButton = CreateFrame("Button", "ReVaultShareButton", WeeklyRewardsFrame, "UIPanelButtonTemplate");
+reVaultShareButton:SetSize(182, 23);
+reVaultShareButton:SetPoint("TOPLEFT", selectRewardButton, "TOPRIGHT", 30, 0);
+reVaultShareButton:SetFrameLevel(6000);
+reVaultShareButton:SetText("Share with ReVault");
+reVaultShareButton:SetScript("OnEnter", function(self)
+    GameTooltip:SetOwner(self, "ANCHOR_RIGHT");
+    GameTooltip:SetText("Share this Great Vault with other players.", nil, nil, nil, nil, true);
+    GameTooltip:Show();
+end)
+
+reVaultShareButton:SetScript("OnLeave", function(self)
+    GameTooltip:Hide();
+end)
+
+reVaultShareButton:SetScript("OnClick", function(self)
+    ReVault(true);
+end)
+
+local expansion = C_WeeklyRewards.GetWeeklyRewardTextureKit();
+local reVaultShareButtonBackground = reVaultShareButton:CreateTexture("$parentBackground", "BACKGROUND", nil, -1);
+if expansion == "Dragonflight" then
+	reVaultShareButtonBackground:SetAtlas("dragonflight-weeklyrewards-frame-button", true);
+	reVaultShareButtonBackground:SetPoint("CENTER", -3, 0);
+else
+	reVaultShareButtonBackground:SetAtlas("evergreen-weeklyrewards-frame-selectbutton", true);
+	reVaultShareButtonBackground:SetPoint("CENTER", 0, 0);
+end
+
+function ReVault(insertToEditbox)
 	local characterName, realm = UnitFullName("player");
-	-- ReVaultFrame:Show();
-	ChatFrame1:AddMessage("\124Hgarrmission:revault:\124h\124cFFFFFF00[".. characterName .. "-" .. realm .."'s Vault]\124h\124r");
+	if (insertToEditbox) then
+		ChatFrame1EditBox:Show();
+		ChatFrame1EditBox:SetText("[ReVault: " .. characterName .. "-" .. realm .."'s Vault]");
+		ChatFrame1EditBox:SetFocus();
+	else
+		ChatFrame1:AddMessage("\124Hgarrmission:revault:\124h\124cFFFFFF00[".. characterName .. "-" .. realm .."'s Vault]\124h\124r");
+	end
 end
 
 local NUM_COLUMNS = 3;
@@ -43,11 +81,11 @@ function ReVaultMixin:SetUpConditionalActivities()
 end
 
 function ReVaultMixin:OnLoad()
-	self:SetMovable(true)
-	self:EnableMouse(true)
-    self:RegisterForDrag("LeftButton")
-    self:SetScript("OnDragStart", self.StartMoving)
-    self:SetScript("OnDragStop", self.StopMovingOrSizing)
+	self:SetMovable(true);
+	self:EnableMouse(true);
+    self:RegisterForDrag("LeftButton");
+    self:SetScript("OnDragStart", self.StartMoving);
+    self:SetScript("OnDragStop", self.StopMovingOrSizing);
 
 	if ReVaultData == nil then
         ReVaultData = {
@@ -69,7 +107,7 @@ function ReVaultMixin:OnLoad()
 end
 
 local function GetServerTime(timestamp)
-    local localTime = date("%a %b %d %H:%M %Y", timestamp)
+    local localTime = date("%a %b %d %H:%M %Y", timestamp);
 
     return localTime;
 end
@@ -82,17 +120,17 @@ function ReVaultMixin:OnShow()
 	self:GetOrCreateOverlay():Show();
 	checkForData = C_Timer.NewTicker(1, function()
 		if self.activities then
-			self.HeaderFrame.Text:SetText(self.owner.."'s Vault");
+			self.HeaderFrame.Text:SetText("Viewing "..self.owner.."'s Vault");
 			self.Blackout:SetShown(false);
 			self.Overlay:Hide();
 			self:FullRefresh();
-			checkForData:Cancel()
+			checkForData:Cancel();
 		else
 			checkCount = checkCount + 1;
 			if (checkCount == 3) then
 				self.activities = ReVaultData[self.owner];
 				self.timestamp = GetServerTime(self.activities.timestamp);
-				self.HeaderFrame.Text:SetText(self.owner.."'s Vault\nCurrent as of "..self.timestamp);
+				self.HeaderFrame.Text:SetText("Viewing "..self.owner.."'s Vault\nCurrent as of "..self.timestamp);
 				self.Blackout:SetShown(false);
 				self.Overlay:Hide();
 				self:FullRefresh();
@@ -154,7 +192,7 @@ end
 function ReVaultMixin:FullRefresh()
 	-- for preview item tooltips
 	C_MythicPlus.RequestMapInfo();
-	self:Refresh(true);
+	self:Refresh();
 end
 
 function ReVaultMixin:Refresh(playSheenAnims)
@@ -179,6 +217,7 @@ function ReVaultMixin:Refresh(playSheenAnims)
 	end
 	
 	self:SetHeight(657);
+	self.activities = nil;
 end
 
 function ReVaultMixin:GetOrCreateOverlay()

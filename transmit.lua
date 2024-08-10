@@ -73,30 +73,27 @@ ChatFrame_AddMessageEventFilter("CHAT_MSG_INSTANCE_CHAT_LEADER", filterFunc)
 
 local function crossRealmSendCommMessage(prefix, text, target)
 	local chattype = "WHISPER"
-	if target and not UnitIsSameServer(target) then
-		if UnitInRaid(target) then
-			chattype = "RAID"
-			-- text = ("%s:%s"):format(target, text)
-		elseif UnitInParty(target) then
-			chattype = "PARTY"
-			-- text = ("%s:%s"):format(target, text)
-		end
-	end
+	-- if target and not UnitIsSameServer(target) then
+	-- 	if UnitInRaid(target) then
+	-- 		chattype = "RAID"
+	-- 		-- text = ("%s:%s"):format(target, text)
+	-- 	elseif UnitInParty(target) then
+	-- 		chattype = "PARTY"
+	-- 		-- text = ("%s:%s"):format(target, text)
+	-- 	end
+	-- end
 	
 	Comm:SendCommMessage(prefix, text, chattype, target)
 end
 
 local function GetEquippedItemsForSlot(itemLink)
     local equippedItems = {}
-
-    -- Get the equip slot of the given item link
     local _, _, _, equipSlot = C_Item.GetItemInfoInstant(itemLink);
 
     if not equipSlot then
         return equippedItems
     end
-
-    -- Function to add item from slot to array
+	
     local function AddItemFromSlot(slot)
         local equippedItemLink = GetInventoryItemLink("player", slot);
         if equippedItemLink then
@@ -104,18 +101,17 @@ local function GetEquippedItemsForSlot(itemLink)
         end
     end
 	
-    -- Check equip slot and handle special cases
     if equipSlot == "INVTYPE_FINGER" then
-        AddItemFromSlot(11) -- Finger 1
-        AddItemFromSlot(12) -- Finger 2
+        AddItemFromSlot(11);
+        AddItemFromSlot(12);
     elseif equipSlot == "INVTYPE_TRINKET" then
-        AddItemFromSlot(13) -- Trinket 1
-        AddItemFromSlot(14) -- Trinket 2
+        AddItemFromSlot(13);
+        AddItemFromSlot(14);
     elseif equipSlot == "INVTYPE_WEAPON" or equipSlot == "INVTYPE_WEAPONMAINHAND" then
-        AddItemFromSlot(16) -- Main Hand
-        AddItemFromSlot(17) -- Off Hand
+        AddItemFromSlot(16);
+        AddItemFromSlot(17);
     elseif equipSlot == "INVTYPE_SHIELD" or equipSlot == "INVTYPE_WEAPONOFFHAND" or equipSlot == "INVTYPE_HOLDABLE" then
-        AddItemFromSlot(17) -- Off Hand
+        AddItemFromSlot(17);
     else
         -- Generic case for single slot items
         local slotId = GetInventorySlotInfo(equipSlot)
