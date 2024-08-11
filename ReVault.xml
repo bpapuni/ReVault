@@ -476,6 +476,14 @@
 							</Anchors>
 						</Texture>
 					</Layer>
+					<Layer level="OVERLAY" textureSubLevel="6">
+						<Texture parentKey="ReVaultLogo" file="Interface\Addons\ReVault\icon-med" >
+							<Size x="96" y="96"/> 
+							<Anchors>
+								<Anchor point="CENTER" relativePoint="TOP" x="-6.5" y="-16"/>
+							</Anchors>
+						</Texture>
+					</Layer>
 				</Layers>
 			</Frame>
 			<Frame parentKey="Blackout" enableMouse="true" frameLevel="1000">
