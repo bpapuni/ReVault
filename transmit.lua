@@ -1,3 +1,4 @@
+local ReVaultFrame = _G["ReVaultFrame"];
 local Comm = LibStub:GetLibrary("AceComm-3.0")
 local LibSerialize = LibStub("LibSerialize");
 local LibDeflate = LibStub("LibDeflate");
@@ -71,21 +72,6 @@ ChatFrame_AddMessageEventFilter("CHAT_MSG_BN_WHISPER_INFORM", filterFunc)
 ChatFrame_AddMessageEventFilter("CHAT_MSG_INSTANCE_CHAT", filterFunc)
 ChatFrame_AddMessageEventFilter("CHAT_MSG_INSTANCE_CHAT_LEADER", filterFunc)
 
-local function crossRealmSendCommMessage(prefix, text, target)
-	local chattype = "WHISPER"
-	-- if target and not UnitIsSameServer(target) then
-	-- 	if UnitInRaid(target) then
-	-- 		chattype = "RAID"
-	-- 		-- text = ("%s:%s"):format(target, text)
-	-- 	elseif UnitInParty(target) then
-	-- 		chattype = "PARTY"
-	-- 		-- text = ("%s:%s"):format(target, text)
-	-- 	end
-	-- end
-	
-	Comm:SendCommMessage(prefix, text, chattype, target)
-end
-
 local function GetEquippedItemsForSlot(itemLink)
     local equippedItems = {}
     local _, _, _, equipSlot = C_Item.GetItemInfoInstant(itemLink);
@@ -113,7 +99,6 @@ local function GetEquippedItemsForSlot(itemLink)
     elseif equipSlot == "INVTYPE_SHIELD" or equipSlot == "INVTYPE_WEAPONOFFHAND" or equipSlot == "INVTYPE_HOLDABLE" then
         AddItemFromSlot(17);
     else
-        -- Generic case for single slot items
         local slotId = GetInventorySlotInfo(equipSlot)
         if slotId then
             AddItemFromSlot(slotId)
@@ -124,7 +109,7 @@ local function GetEquippedItemsForSlot(itemLink)
 end
 
 local function GetRewards()
-	local weeklyRewardsActivities = C_WeeklyRewards.GetActivities()
+	local weeklyRewardsActivities = C_WeeklyRewards.GetActivities();
 
 	for i, activity in ipairs(weeklyRewardsActivities) do
 		if activity.rewards and #activity.rewards > 0 and i < 10 then
@@ -138,40 +123,40 @@ local function GetRewards()
 			activity.rewards =  {}
 		end
 	end
+
+	weeklyRewardsActivities["timestamp"] = time();
 	return weeklyRewardsActivities;
 end
 
 Comm:RegisterComm("ReVault", function(prefix, message, chattype, sender)
 	local _, _, request = message:find("([^%s]+):request");
 	local _, _, response = message:find("response:([^%s]+)");
-	if chattype == "PARTY" or chattype == "RAID" then
-		local _, _, requestTarget = message:find("([^%s]+):request");
-		local _, _, responseTarget = message:find("([^%s]+):response");
-		local yourName, realm = UnitFullName("player")
-		-- Player has received a request
-		if request and requestTarget == yourName.."-"..realm then
-			local rewards = GetRewards();
-			rewards.owner = requestTarget;
-			rewards.timestamp = time();
-			local serialized = LibSerialize:SerializeEx(configForLS, rewards);
-			local compressed = LibDeflate:CompressDeflate(serialized, configForDeflate);
-			local encoded = LibDeflate:EncodeForPrint(compressed);
-			crossRealmSendCommMessage("ReVault", sender .. ":response:" .. encoded, sender)
-		-- Player has received a response
-		elseif response and responseTarget == yourName.."-"..realm then
-			local decoded = LibDeflate:DecodeForPrint(response)
-			local decompressed = LibDeflate:DecompressDeflate(decoded)
-			local success, deserialized = LibSerialize:Deserialize(decompressed)
+	-- if chattype == "PARTY" or chattype == "RAID" then
+	-- 	local _, _, requestTarget = message:find("([^%s]+):request");
+	-- 	local _, _, responseTarget = message:find("([^%s]+):response");
+	-- 	local yourName, realm = UnitFullName("player")
+	-- 	-- Player has received a request
+	-- 	if request and requestTarget == yourName.."-"..realm then
+	-- 		local rewards = GetRewards();
+	-- 		rewards.owner = requestTarget;
+	-- 		rewards.timestamp = time();
+	-- 		local serialized = LibSerialize:SerializeEx(configForLS, rewards);
+	-- 		local compressed = LibDeflate:CompressDeflate(serialized, configForDeflate);
+	-- 		local encoded = LibDeflate:EncodeForPrint(compressed);
+	-- 		crossRealmSendCommMessage("ReVault", sender .. ":response:" .. encoded, sender)
+	-- 	-- Player has received a response
+	-- 	elseif response and responseTarget == yourName.."-"..realm then
+	-- 		local decoded = LibDeflate:DecodeForPrint(response)
+	-- 		local decompressed = LibDeflate:DecompressDeflate(decoded)
+	-- 		local success, deserialized = LibSerialize:Deserialize(decompressed)
 			
-			ReVaultFrame.activities = deserialized;
-			ReVaultData[deserialized.owner] = deserialized;
-		end
-	else
+	-- 		ReVaultFrame.activities = deserialized;
+	-- 		ReVaultData[deserialized.owner] = deserialized;
+	-- 	end
+	-- else
 		if request then
 			local rewards = GetRewards();
 			local yourName, realm = UnitFullName("player");
-			rewards.owner = yourName.."-"..realm;
-			rewards.timestamp = time();
 			local serialized = LibSerialize:SerializeEx(configForLS, rewards);
 			local compressed = LibDeflate:CompressDeflate(serialized, configForDeflate);
 			local encoded = LibDeflate:EncodeForPrint(compressed);
@@ -182,10 +167,9 @@ Comm:RegisterComm("ReVault", function(prefix, message, chattype, sender)
 			local success, deserialized = LibSerialize:Deserialize(decompressed)
 
 			ReVaultFrame.activities = deserialized;
-			ReVaultData[deserialized.owner] = deserialized;
-			-- ReVaultFrame:Show();
+			ReVaultData[ReVaultFrame.owner] = deserialized;
 		end
-	end
+	-- end
 end)
 
 hooksecurefunc("SetItemRef", function(link, text)
@@ -201,7 +185,7 @@ hooksecurefunc("SetItemRef", function(link, text)
 			ReVaultFrame.owner = characterName;
 			ReVaultFrame:Hide();
 			ReVaultFrame:Show();
-			crossRealmSendCommMessage("ReVault", characterName .. ":request", characterName)
+			Comm:SendCommMessage("ReVault", characterName .. ":request", "WHISPER", characterName);
 		end
 	end
 end)
