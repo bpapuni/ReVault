@@ -414,9 +414,9 @@ end
 
 local function GetItemStats(itemLink)
     local stats = C_Item.GetItemStats(itemLink)
-    local dps = C_Item.GetDetailedItemLevelInfo(itemLink)
+	if not stats then return end
     return {
-        ["Damage Per Second"] = dps,
+        ["Damage Per Second"] = stats["ITEM_MOD_DAMAGE_PER_SECOND_SHORT"] or 0,
         ["Armor"] = stats["ITEM_MOD_ARMOR_SHORT"] or 0,
         ["Strength"] = stats["ITEM_MOD_STRENGTH_SHORT"] or 0,
         ["Agility"] = stats["ITEM_MOD_AGILITY_SHORT"] or 0,
@@ -448,13 +448,14 @@ local function AddItemComparison(tooltip, rewardItemLink, equippedItemLink)
     local socketIcon = "|TInterface\\ItemSocketingFrame\\UI-EmptySocket-Prismatic:13|t  "
     local rewardItemStats = GetItemStats(rewardItemLink)
     local equippedItemStats = GetItemStats(equippedItemLink)
+	local charName = string.match(ReVaultFrame.owner, "([^%-]+)");
     
     local statDifference = {}
     for _, stat in ipairs(statOrder) do
         statDifference[stat] = rewardItemStats[stat] - equippedItemStats[stat]
     end
     
-    tooltip:AddLine("\nIf you replace this item, the following stat changes will occur:\n", 1, 0.87, 0, true)
+    tooltip:AddLine("\nIf ".. charName .. " replaces this item, the following stat changes will occur:\n", 1, 0.87, 0, true)
     local _, _, _, equipSlot = C_Item.GetItemInfoInstant(rewardItemLink)
     
     for _, stat in ipairs(statOrder) do
