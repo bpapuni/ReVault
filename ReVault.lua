@@ -452,7 +452,8 @@ local function AddItemComparison(tooltip, rewardItemLink, equippedItemLink)
     
     local statDifference = {}
     for _, stat in ipairs(statOrder) do
-        statDifference[stat] = rewardItemStats[stat] - equippedItemStats[stat]
+        local statString = string.format("%.1f", rewardItemStats[stat] - equippedItemStats[stat]);
+        statDifference[stat] = tonumber(statString);
     end
     
     tooltip:AddLine("\nIf ".. charName .. " replaces this item, the following stat changes will occur:\n", 1, 0.87, 0, true)
@@ -460,14 +461,19 @@ local function AddItemComparison(tooltip, rewardItemLink, equippedItemLink)
     
     for _, stat in ipairs(statOrder) do
         local value = statDifference[stat]
-        local isDPS = stat == "Damage Per Second"
+        -- local isDPS = stat == "Damage Per Second"
         local isSocket = stat == "Prismatic Socket"
         local prefix = value > 0 and "+" or ""
         local color = value < 0 and RED_FONT_COLOR or (value > 0 and GREEN_FONT_COLOR or WHITE_FONT_COLOR)
         
-        if (not isDPS or (equipSlot == "INVTYPE_WEAPON" or equipSlot == "INVTYPE_WEAPONMAINHAND")) and value ~= 0 then
-            tooltip:AddLine(color:GenerateHexColorMarkup() .. prefix .. FormatNumberWithCommas(value) .. "|r " ..
-                            (isSocket and socketIcon or "") .. WHITE_FONT_COLOR:GenerateHexColorMarkup() .. stat .. "|r")
+        -- if (not isDPS or (equipSlot == "INVTYPE_WEAPON" or equipSlot == "INVTYPE_WEAPONMAINHAND")) and value ~= 0 then
+        --     tooltip:AddLine(color:GenerateHexColorMarkup() .. prefix .. FormatNumberWithCommas(value) .. "|r " ..
+        --                     (isSocket and socketIcon or "") .. WHITE_FONT_COLOR:GenerateHexColorMarkup() .. stat .. "|r")
+        -- end
+
+        if value ~= 0 then
+		tooltip:AddLine(color:GenerateHexColorMarkup() .. prefix .. FormatNumberWithCommas(value) .. "|r " ..
+                            (isSocket and socketIcon or "") .. WHITE_FONT_COLOR:GenerateHexColorMarkup() .. stat .. "|r");
         end
     end
 end
