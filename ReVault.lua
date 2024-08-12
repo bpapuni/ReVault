@@ -313,7 +313,8 @@ function ReVaultActivityMixin:Refresh(activityInfo)
 		self.hasRewards = false
 		self.info = activityInfo;
 	else
-		self.unlocked = activityInfo.progress >= activityInfo.threshold;
+		-- self.unlocked = activityInfo.progress >= activityInfo.threshold;
+		self.unlocked = activityInfo.rewards.itemLink;
 		self.hasRewards = activityInfo.rewards.itemLink
 		self.info = activityInfo;
 	end
@@ -487,8 +488,6 @@ function ReVaultActivityMixin:ShowPreviewItemTooltip()
 			ShoppingTooltip1:SetWidth(GameTooltip:GetWidth());
             ShoppingTooltip1:SetHyperlink(equippedItemLink);
 			AddItemComparison(ShoppingTooltip1, rewardItemLink, equippedItemLink);
-			-- ShoppingTooltip1:AddLine("\nIf you replace this item, the following stat changes will occur:\n", 1, 1, 0, true);
-			-- ShoppingTooltip1:AddLine(GetStatDifferences(rewardItemLink, equippedItemLink));
             ShoppingTooltip1:Show();
         elseif i == 2 then
             ShoppingTooltip2:SetOwner(GameTooltip, "ANCHOR_NONE");
@@ -496,8 +495,6 @@ function ReVaultActivityMixin:ShowPreviewItemTooltip()
 			ShoppingTooltip2:SetWidth(GameTooltip:GetWidth());
             ShoppingTooltip2:SetHyperlink(equippedItemLink);
 			AddItemComparison(ShoppingTooltip2, rewardItemLink, equippedItemLink);
-			-- ShoppingTooltip2:AddLine("\nIf you replace this item, the following stat changes will occur:\n", 1, 1, 0, true);
-			-- ShoppingTooltip2:AddLine(GetStatDifferences(rewardItemLink, equippedItemLink));
             ShoppingTooltip2:Show();
         end
     end
