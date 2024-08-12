@@ -29,6 +29,14 @@ reVaultShareButton:SetScript("OnClick", function(self)
     ReVault(true);
 end)
 
+WeeklyRewardsFrame:HookScript("OnShow", function()
+	if selectRewardButton:IsShown() then
+		reVaultShareButton:SetPoint("TOPLEFT", selectRewardButton, "TOPRIGHT", 30, 0);
+	else
+		reVaultShareButton:SetPoint("TOPLEFT", selectRewardButton, "TOPRIGHT", -73, 0);
+	end
+end)
+
 local reVaultShareButtonBackground = reVaultShareButton:CreateTexture("$parentBackground", "BACKGROUND", nil, -1);
 -- if still Dragonflight
 if GetExpansionLevel() == 9 then
@@ -118,6 +126,7 @@ function ReVaultMixin:OnShow()
 	local checkForData;
 	self.Blackout:SetShown(true);
 	self:GetOrCreateOverlay():Show();
+	
 	checkForData = C_Timer.NewTicker(1, function()
 		if self.activities then
 			self.HeaderFrame.Text:SetText("Viewing "..self.owner.."'s Vault");
