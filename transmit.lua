@@ -121,25 +121,30 @@ end
 
 local function GetRewards()
 	local weeklyRewardsActivities = C_WeeklyRewards.GetActivities();
+	local hasRewards = C_WeeklyRewards.HasGeneratedRewards();
 
-	for i, activity in ipairs(weeklyRewardsActivities) do
-		if activity.rewards and #activity.rewards > 0 then
-			local itemDBID;
-			for j, reward in ipairs(activity.rewards) do
-				local _, _, _, itemSubType = C_Item.GetItemInfoInstant(reward.id);
-				itemDBID = itemSubType ~= "INVTYPE_NON_EQUIP_IGNORE" and reward.itemDBID or itemDBID;
+	if hasRewards then
+		for i, activity in ipairs(weeklyRewardsActivities) do
+			if activity.rewards and #activity.rewards > 0 then
+				local itemDBID;
+				for j, reward in ipairs(activity.rewards) do
+					local _, _, _, itemSubType = C_Item.GetItemInfoInstant(reward.id);
+					itemDBID = itemSubType ~= "INVTYPE_NON_EQUIP_IGNORE" and reward.itemDBID or itemDBID;
+				end
+				local rewardItemLink = itemDBID ~= nil and C_WeeklyRewards.GetItemHyperlink(itemDBID);
+				activity.rewards = rewardItemLink and { 
+					itemLink = rewardItemLink,
+					equippedItems = GetEquippedItemsForSlot(rewardItemLink)
+				} or {}
+				itemDBID = nil;
+			else
+				activity.rewards =  {}
 			end
-			local rewardItemLink = itemDBID ~= nil and C_WeeklyRewards.GetItemHyperlink(itemDBID);
-			activity.rewards = rewardItemLink and { 
-				itemLink = rewardItemLink,
-				equippedItems = GetEquippedItemsForSlot(rewardItemLink)
-			} or {}
-			itemDBID = nil;
-		else
-			activity.rewards =  {}
 		end
+	else
+		weeklyRewardsActivities = RevaultData[ReVaultFrame.owner] or weeklyRewardsActivities;			
 	end
-	
+
 	weeklyRewardsActivities["timestamp"] = time();
 	return weeklyRewardsActivities;
 end
