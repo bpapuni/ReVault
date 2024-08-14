@@ -1,7 +1,7 @@
 ## Interface: 110002
-## Author: Papwnee-Frostmourne
+## Author: Papdh-Frostmourne
 ## Title: ReVault
-## Version: v1.0.2
+## Version: v1.0.3
 ## Notes: Share the contents of your Great Vault
 
 ## IconTexture: Interface\Addons\ReVault\icon
