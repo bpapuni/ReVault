@@ -1,0 +1,6 @@
+.vscode\
+.git\
+Screenshots\
+.publishignore
+publish.bat
+README.md
