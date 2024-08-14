@@ -99,7 +99,18 @@ local function GetEquippedItemsForSlot(itemLink)
     elseif equipSlot == "INVTYPE_SHIELD" or equipSlot == "INVTYPE_WEAPONOFFHAND" or equipSlot == "INVTYPE_HOLDABLE" then
         AddItemFromSlot(17);
     else
-        local slotId = GetInventorySlotInfo(equipSlot)
+		local slotNameMap = {
+			["INVTYPE_HEAD"] = "HEADSLOT",
+			["INVTYPE_NECK"] = "NECKSLOT",
+			["INVTYPE_SHOULDER"] = "SHOULDERSLOT",
+			["INVTYPE_CHEST"] = "CHESTSLOT",
+			["INVTYPE_WAIST"] = "WAISTSLOT",
+			["INVTYPE_LEGS"] = "LEGSSLOT",
+			["INVTYPE_FEET"] = "FEETSLOT",
+			["INVTYPE_WRIST"] = "WRISTSLOT",
+			["INVTYPE_HAND"] = "HANDSSLOT",
+		}
+        local slotId = GetInventorySlotInfo(slotNameMap[equipSlot])
         if slotId then
             AddItemFromSlot(slotId)
         end
@@ -112,10 +123,14 @@ local function GetRewards()
 	local weeklyRewardsActivities = C_WeeklyRewards.GetActivities();
 
 	for i, activity in ipairs(weeklyRewardsActivities) do
-		if activity.rewards and #activity.rewards > 0 and i < 10 then
-			local itemDBID = activity.rewards[1].itemDBID
-			local rewardItemLink = C_WeeklyRewards.GetItemHyperlink(itemDBID)
-			activity.rewards = { 
+		if activity.rewards and #activity.rewards > 0 then
+			local itemDBID;
+			for j, reward in ipairs(activity.rewards) do
+				local link = C_WeeklyRewards.GetItemHyperlink(reward.itemDBID);
+				itemDBID = not (link:find("Keystone") or link:find("Token")) and reward.itemDBID or itemDBID;
+			end
+			local rewardItemLink = itemDBID and C_WeeklyRewards.GetItemHyperlink(itemDBID) or false;
+			activity.rewards = rewardItemLink and { 
 				itemLink = rewardItemLink,
 				equippedItems = GetEquippedItemsForSlot(rewardItemLink)
 			}
