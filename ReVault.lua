@@ -108,12 +108,6 @@ function ReVaultMixin:OnLoad()
 	RegisterUIPanel(ReVaultFrame, attributes);
 end
 
-local function GetServerTime(timestamp)
-    local localTime = date("%a %b %d %H:%M %Y", timestamp);
-
-    return localTime;
-end
-
 function ReVaultMixin:OnShow()
 	PlaySound(SOUNDKIT.UI_WEEKLY_REWARD_OPEN_WINDOW);
 	local checkCount = 0;
@@ -131,12 +125,13 @@ function ReVaultMixin:OnShow()
 		else
 			checkCount = checkCount + 1;
 			if (checkCount == 3) then
+				local timestamp = date("%a %b %d %H:%M %Y", self.activities.timestamp);
 				self.activities = ReVaultData[self.owner];
-				self.timestamp = GetServerTime(self.activities.timestamp);
-				self.HeaderFrame.Text:SetText("Viewing "..self.owner.."'s Vault\nCurrent as of "..self.timestamp);
+				self.HeaderFrame.Text:SetText("Viewing "..self.owner.."'s Vault\nCurrent as of "..timestamp);
 				self.Blackout:SetShown(false);
 				self.Overlay:Hide();
 				self:FullRefresh();
+				checkForData:Cancel();
 			end
 		end
 	end, 3)
@@ -204,14 +199,7 @@ function ReVaultMixin:Refresh(playSheenAnims)
 	self:UpdateSelection();
 
 	for i, activityInfo in ipairs(activities) do
-		if i == 10 then break end
-		-- local activityType = { 1, 6, 3 };
-		-- local activityTypeIndex = math.floor((i - 1) / 3) + 1;
-		
-		-- activityInfo.type = activityType[activityTypeIndex];
-		-- activityInfo.index = ((i - 1) % 3) + 1;
-		-- activityInfo.threshold = weeklyRewardsActivities[i].threshold
-		
+		if i == 10 then break end		
 		local frame = self:GetActivityFrame(activityInfo.type, activityInfo.index);
 
 		if frame then
@@ -455,15 +443,9 @@ local function AddItemComparison(tooltip, rewardItemLink, equippedItemLink)
     
     for _, stat in ipairs(statOrder) do
         local value = statDifference[stat]
-        -- local isDPS = stat == "Damage Per Second"
         local isSocket = stat == "Prismatic Socket"
         local prefix = value > 0 and "+" or ""
         local color = value < 0 and RED_FONT_COLOR or (value > 0 and GREEN_FONT_COLOR or WHITE_FONT_COLOR)
-        
-        -- if (not isDPS or (equipSlot == "INVTYPE_WEAPON" or equipSlot == "INVTYPE_WEAPONMAINHAND")) and value ~= 0 then
-        --     tooltip:AddLine(color:GenerateHexColorMarkup() .. prefix .. FormatNumberWithCommas(value) .. "|r " ..
-        --                     (isSocket and socketIcon or "") .. WHITE_FONT_COLOR:GenerateHexColorMarkup() .. stat .. "|r")
-        -- end
 
         if value ~= 0 then
 		tooltip:AddLine(color:GenerateHexColorMarkup() .. prefix .. FormatNumberWithCommas(value) .. "|r " ..
