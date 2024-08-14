@@ -126,19 +126,20 @@ local function GetRewards()
 		if activity.rewards and #activity.rewards > 0 then
 			local itemDBID;
 			for j, reward in ipairs(activity.rewards) do
-				local link = C_WeeklyRewards.GetItemHyperlink(reward.itemDBID);
-				itemDBID = not (link:find("Keystone") or link:find("Token")) and reward.itemDBID or itemDBID;
+				local _, _, _, itemSubType = C_Item.GetItemInfoInstant(reward.id);
+				itemDBID = itemSubType ~= "INVTYPE_NON_EQUIP_IGNORE" and reward.itemDBID or itemDBID;
 			end
-			local rewardItemLink = itemDBID and C_WeeklyRewards.GetItemHyperlink(itemDBID) or false;
+			local rewardItemLink = itemDBID ~= nil and C_WeeklyRewards.GetItemHyperlink(itemDBID);
 			activity.rewards = rewardItemLink and { 
 				itemLink = rewardItemLink,
 				equippedItems = GetEquippedItemsForSlot(rewardItemLink)
-			}
+			} or {}
+			itemDBID = nil;
 		else
 			activity.rewards =  {}
 		end
 	end
-
+	
 	weeklyRewardsActivities["timestamp"] = time();
 	return weeklyRewardsActivities;
 end
