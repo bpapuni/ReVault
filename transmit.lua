@@ -1,3 +1,9 @@
+--[[
+This code includes a modified version of the transmission functions originally authored by the creators and contributors of WeakAuras.
+All credits go to those amazing developers for the base implementation.
+The original code can be found at https://github.com/WeakAuras/WeakAuras2/blob/main/WeakAuras/Transmission.lua. 
+]]
+
 local ReVaultFrame = _G["ReVaultFrame"];
 local Comm = LibStub:GetLibrary("AceComm-3.0")
 local LibSerialize = LibStub("LibSerialize");
@@ -28,7 +34,8 @@ local function filterFunc(_, event, msg, player, l, cs, t, flag, channelId, ...)
 	until(done)
 	if newMsg ~= "" then
 		local trimmedPlayer = Ambiguate(player, "none")
-		if event == "CHAT_MSG_WHISPER" and not UnitInRaid(trimmedPlayer) and not UnitInParty(trimmedPlayer) then -- XXX: Need a guild check
+		local guid = select(5, ...)
+		if event == "CHAT_MSG_WHISPER" and not UnitInRaid(trimmedPlayer) and not UnitInParty(trimmedPlayer) and not (IsGuildMember and IsGuildMember(guid)) then
 			local _, num = BNGetNumFriends()
 			for i=1, num do
 				if C_BattleNet then -- introduced in 8.2.5 PTR
@@ -151,45 +158,21 @@ end
 Comm:RegisterComm("ReVault", function(prefix, message, chattype, sender)
 	local _, _, request = message:find("([^%s]+):request");
 	local _, _, response = message:find("response:([^%s]+)");
-	-- if chattype == "PARTY" or chattype == "RAID" then
-	-- 	local _, _, requestTarget = message:find("([^%s]+):request");
-	-- 	local _, _, responseTarget = message:find("([^%s]+):response");
-	-- 	local yourName, realm = UnitFullName("player")
-	-- 	-- Player has received a request
-	-- 	if request and requestTarget == yourName.."-"..realm then
-	-- 		local rewards = GetRewards();
-	-- 		rewards.owner = requestTarget;
-	-- 		rewards.timestamp = time();
-	-- 		local serialized = LibSerialize:SerializeEx(configForLS, rewards);
-	-- 		local compressed = LibDeflate:CompressDeflate(serialized, configForDeflate);
-	-- 		local encoded = LibDeflate:EncodeForPrint(compressed);
-	-- 		crossRealmSendCommMessage("ReVault", sender .. ":response:" .. encoded, sender)
-	-- 	-- Player has received a response
-	-- 	elseif response and responseTarget == yourName.."-"..realm then
-	-- 		local decoded = LibDeflate:DecodeForPrint(response)
-	-- 		local decompressed = LibDeflate:DecompressDeflate(decoded)
-	-- 		local success, deserialized = LibSerialize:Deserialize(decompressed)
-			
-	-- 		ReVaultFrame.activities = deserialized;
-	-- 		ReVaultData[deserialized.owner] = deserialized;
-	-- 	end
-	-- else
-		if request then
-			local rewards = GetRewards();
-			local yourName, realm = UnitFullName("player");
-			local serialized = LibSerialize:SerializeEx(configForLS, rewards);
-			local compressed = LibDeflate:CompressDeflate(serialized, configForDeflate);
-			local encoded = LibDeflate:EncodeForPrint(compressed);
-			Comm:SendCommMessage(prefix, "response:" .. encoded, "WHISPER", sender)
-		elseif response then
-			local decoded = LibDeflate:DecodeForPrint(response)
-			local decompressed = LibDeflate:DecompressDeflate(decoded)
-			local success, deserialized = LibSerialize:Deserialize(decompressed)
+	if request then
+		local rewards = GetRewards();
+		local yourName, realm = UnitFullName("player");
+		local serialized = LibSerialize:SerializeEx(configForLS, rewards);
+		local compressed = LibDeflate:CompressDeflate(serialized, configForDeflate);
+		local encoded = LibDeflate:EncodeForPrint(compressed);
+		Comm:SendCommMessage(prefix, "response:" .. encoded, "WHISPER", sender)
+	elseif response then
+		local decoded = LibDeflate:DecodeForPrint(response)
+		local decompressed = LibDeflate:DecompressDeflate(decoded)
+		local success, deserialized = LibSerialize:Deserialize(decompressed)
 
-			ReVaultFrame.activities = deserialized;
-			ReVaultData[ReVaultFrame.owner] = deserialized;
-		end
-	-- end
+		ReVaultFrame.activities = deserialized;
+		ReVaultData[ReVaultFrame.owner] = deserialized;
+	end
 end)
 
 hooksecurefunc("SetItemRef", function(link, text)
