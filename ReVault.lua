@@ -449,6 +449,7 @@ local function AddItemComparison(tooltip, rewardItemLink, equippedItemLink)
     local equippedItemStats = GetItemStats(equippedItemLink)
 	local charName = string.match(ReVaultFrame.owner, "([^%-]+)");
     
+	if not equippedItemStats then return end
     local statDifference = {}
     for _, stat in ipairs(statOrder) do
         local statString = string.format("%.1f", rewardItemStats[stat] - equippedItemStats[stat]);
