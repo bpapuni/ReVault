@@ -131,7 +131,7 @@ function ReVaultMixin:OnShow()
 				self:FullRefresh();
 			else
 				ReVaultFrame:Hide();
-				UIErrorsFrame:AddMessage("No vault data found for "..self.owner, 1.0, 0.0, 0.0, 53, 5);
+				UIErrorsFrame:AddMessage("No vault data found for "..self.owner, 1.0, 0.1, 0.1, 1.0);
 			end
 			checkForData:Cancel();
 		else
@@ -146,7 +146,7 @@ function ReVaultMixin:OnShow()
 					self:FullRefresh();
 				else
 					ReVaultFrame:Hide();
-					UIErrorsFrame:AddMessage("No vault data found for "..self.owner, 1.0, 0.0, 0.0, 53, 5);
+					UIErrorsFrame:AddMessage("No vault data found for "..self.owner, 1.0, 0.1, 0.1, 1.0);
 				end
 				checkForData:Cancel();
 			end
