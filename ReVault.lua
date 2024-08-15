@@ -29,8 +29,8 @@ reVaultShareButton:SetScript("OnClick", function(self)
     ReVault(true);
 end)
 
-WeeklyRewardsFrame:HookScript("OnShow", function()
-	if selectRewardButton:IsShown() then
+hooksecurefunc(selectRewardButton, "SetShown", function(self)
+	if self:IsShown() then
 		reVaultShareButton:SetPoint("TOPLEFT", selectRewardButton, "TOPRIGHT", 30, 0);
 	else
 		reVaultShareButton:SetPoint("TOPLEFT", selectRewardButton, "TOPRIGHT", -73, 0);
