@@ -29,8 +29,8 @@ reVaultShareButton:SetScript("OnClick", function(self)
     ReVault(true);
 end)
 
-WeeklyRewardsFrame:HookScript("OnShow", function()
-	if selectRewardButton:IsShown() then
+hooksecurefunc(selectRewardButton, "SetShown", function(self)
+	if self:IsShown() then
 		reVaultShareButton:SetPoint("TOPLEFT", selectRewardButton, "TOPRIGHT", 30, 0);
 	else
 		reVaultShareButton:SetPoint("TOPLEFT", selectRewardButton, "TOPRIGHT", -73, 0);
@@ -117,20 +117,37 @@ function ReVaultMixin:OnShow()
 	
 	checkForData = C_Timer.NewTicker(1, function()
 		if self.activities then
-			self.HeaderFrame.Text:SetText("Viewing "..self.owner.."'s Vault");
-			self.Blackout:SetShown(false);
-			self.Overlay:Hide();
-			self:FullRefresh();
+			if self.activities.hasRewards then
+				self.HeaderFrame.Text:SetText("Viewing "..self.owner.."'s Vault");
+				self.Blackout:SetShown(false);
+				self.Overlay:Hide();
+				self:FullRefresh();
+			elseif ReVaultData[self.owner] then
+				self.activities = ReVaultData[self.owner];
+				self.timestamp = date("%a %b %d %H:%M %Y", self.activities.timestamp);
+				self.HeaderFrame.Text:SetText("Viewing "..self.owner.."'s Vault\nCurrent as of "..self.timestamp);
+				self.Blackout:SetShown(false);
+				self.Overlay:Hide();
+				self:FullRefresh();
+			else
+				ReVaultFrame:Hide();
+				UIErrorsFrame:AddMessage("No vault data found for "..self.owner, 1.0, 0.1, 0.1, 1.0);
+			end
 			checkForData:Cancel();
 		else
 			checkCount = checkCount + 1;
 			if (checkCount == 3) then
-				local timestamp = date("%a %b %d %H:%M %Y", self.activities.timestamp);
-				self.activities = ReVaultData[self.owner];
-				self.HeaderFrame.Text:SetText("Viewing "..self.owner.."'s Vault\nCurrent as of "..timestamp);
-				self.Blackout:SetShown(false);
-				self.Overlay:Hide();
-				self:FullRefresh();
+				if ReVaultData[self.owner] then
+					self.activities = ReVaultData[self.owner];
+					self.timestamp = date("%a %b %d %H:%M %Y", self.activities.timestamp);
+					self.HeaderFrame.Text:SetText("Viewing "..self.owner.."'s Vault\nCurrent as of "..self.timestamp);
+					self.Blackout:SetShown(false);
+					self.Overlay:Hide();
+					self:FullRefresh();
+				else
+					ReVaultFrame:Hide();
+					UIErrorsFrame:AddMessage("No vault data found for "..self.owner, 1.0, 0.1, 0.1, 1.0);
+				end
 				checkForData:Cancel();
 			end
 		end
@@ -432,6 +449,7 @@ local function AddItemComparison(tooltip, rewardItemLink, equippedItemLink)
     local equippedItemStats = GetItemStats(equippedItemLink)
 	local charName = string.match(ReVaultFrame.owner, "([^%-]+)");
     
+	if not equippedItemStats then return end
     local statDifference = {}
     for _, stat in ipairs(statOrder) do
         local statString = string.format("%.1f", rewardItemStats[stat] - equippedItemStats[stat]);
