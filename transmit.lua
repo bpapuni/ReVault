@@ -140,12 +140,11 @@ local function GetRewards()
 			else
 				activity.rewards =  {}
 			end
-		end
-	else
-		weeklyRewardsActivities = RevaultData[ReVaultFrame.owner] or weeklyRewardsActivities;			
+		end		
 	end
 
 	weeklyRewardsActivities["timestamp"] = time();
+	weeklyRewardsActivities["hasRewards"] = hasRewards;
 	return weeklyRewardsActivities;
 end
 
