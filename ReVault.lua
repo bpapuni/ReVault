@@ -116,7 +116,7 @@ function ReVaultMixin:OnShow()
 	self:GetOrCreateOverlay():Show();
 	
 	checkForData = C_Timer.NewTicker(1, function()
-		if self.activities then
+		if #self.activities > 0 then
 			if self.activities.hasRewards then
 				self.HeaderFrame.Text:SetText("Viewing "..self.owner.."'s Vault");
 				self.Blackout:SetShown(false);
@@ -137,7 +137,7 @@ function ReVaultMixin:OnShow()
 		else
 			checkCount = checkCount + 1;
 			if (checkCount == 3) then
-				if ReVaultData[self.owner] then
+				if #ReVaultData[self.owner] > 0 then
 					self.activities = ReVaultData[self.owner];
 					self.timestamp = date("%a %b %d %H:%M %Y", self.activities.timestamp);
 					self.HeaderFrame.Text:SetText("Viewing "..self.owner.."'s Vault\nCurrent as of "..self.timestamp);
@@ -473,6 +473,7 @@ local function AddItemComparison(tooltip, rewardItemLink, equippedItemLink)
 end
 
 function ReVaultActivityMixin:ShowPreviewItemTooltip()
+    if not (self.info or self.info.rewards.itemLink) then return end
 	local rewardItemLink = self.info.rewards.itemLink;
     if not rewardItemLink then return end
 
@@ -502,9 +503,9 @@ function ReVaultActivityMixin:ShowPreviewItemTooltip()
 end
 
 function ReVaultActivityMixin:HidePreviewItemTooltip()
-    if not self.info.rewards.itemLink then return end
+    if not (self.info or self.info.rewards.itemLink) then return end
 
-	local equippedItems = self.info.rewards.equippedItems;
+	local equippedItems = self.info and self.info.rewards.equippedItems;
 	for i, _ in ipairs(equippedItems) do
 		local equippedItemTooltip = _G["ShoppingTooltip"..i]
 		equippedItemTooltip:Hide();

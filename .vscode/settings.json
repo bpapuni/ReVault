@@ -110,7 +110,14 @@
         "RegisterStateDriver",
         "WEEKLY_REWARDS_SELECT_REWARD",
         "ChatFrame1EditBox",
-        "ItemRefTooltip"
+        "ItemRefTooltip",
+        "UIParent",
+        "GameTooltip",
+        "SOUNDKIT",
+        "ContinuableContainer",
+        "Item",
+        "WHITE_FONT_COLOR",
+        "UIErrorsFrame"
     ],
     "Lua.runtime.version": "Lua 5.1",
     "Lua.runtime.builtin": {
@@ -125,6 +132,6 @@
         "utf8": "disable"
     },
     "Lua.workspace.library": [
-        "~\\.vscode\\extensions\\ketho.wow-api-0.16.5\\Annotations"
+        "~\\.vscode\\extensions\\ketho.wow-api-0.17.6\\Annotations"
     ]
 }
