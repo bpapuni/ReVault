@@ -60,21 +60,21 @@ local SELECTION_STATE_SELECTED = 3;
 ReVaultMixin = { };
 
 function ReVaultMixin:SetUpConditionalActivities()
-	self.showWorldRow = false;
-	local activities = C_WeeklyRewards.GetActivities();
-	for i, activityInfo in ipairs(activities) do
-		if activityInfo.type == Enum.WeeklyRewardChestThresholdType.World then
-			self.showWorldRow = true;
-			break;
-		end
-	end
+	self.showWorldRow = true;
+	-- local activities = C_WeeklyRewards.GetActivities();
+	-- for i, activityInfo in ipairs(activities) do
+	-- 	if activityInfo.type == Enum.WeeklyRewardChestThresholdType.World then
+	-- 		self.showWorldRow = true;
+	-- 		break;
+	-- 	end
+	-- end
 
-	self.showPVPRow = not self.showWorldRow;
+	-- self.showPVPRow = not self.showWorldRow;
 
-	self:SetActivityShown(self.showPVPRow, self.PVPFrame, Enum.WeeklyRewardChestThresholdType.RankedPvP);
-	if self.showPVPRow then
-		self:SetUpActivity(self.PVPFrame, PVP, "evergreen-weeklyrewards-category-pvp", Enum.WeeklyRewardChestThresholdType.RankedPvP);
-	end
+	-- self:SetActivityShown(self.showPVPRow, self.PVPFrame, Enum.WeeklyRewardChestThresholdType.RankedPvP);
+	-- if self.showPVPRow then
+	-- 	self:SetUpActivity(self.PVPFrame, PVP, "evergreen-weeklyrewards-category-pvp", Enum.WeeklyRewardChestThresholdType.RankedPvP);
+	-- end
 
 	self:SetActivityShown(self.showWorldRow, self.WorldFrame, Enum.WeeklyRewardChestThresholdType.World);
 	if self.showWorldRow then
@@ -96,7 +96,15 @@ function ReVaultMixin:OnLoad()
 
 	self:SetUpActivity(self.RaidFrame, RAIDS, "evergreen-weeklyrewards-category-raids", Enum.WeeklyRewardChestThresholdType.Raid);
 	self:SetUpActivity(self.MythicFrame, DUNGEONS, "evergreen-weeklyrewards-category-dungeons", Enum.WeeklyRewardChestThresholdType.Activities);
-	self:SetUpConditionalActivities();
+
+	self:SetActivityShown(true, self.WorldFrame, Enum.WeeklyRewardChestThresholdType.World);
+	self:SetUpActivity(self.WorldFrame, WORLD, "evergreen-weeklyrewards-category-world", Enum.WeeklyRewardChestThresholdType.World);
+
+	WeeklyRewardsFrame:SetActivityShown(false, WeeklyRewardsFrame.PVPFrame, Enum.WeeklyRewardChestThresholdType.RankedPvP);
+	WeeklyRewardsFrame:SetActivityShown(true, WeeklyRewardsFrame.WorldFrame, Enum.WeeklyRewardChestThresholdType.World);
+	WeeklyRewardsFrame:SetUpActivity(WeeklyRewardsFrame.WorldFrame, WORLD, "evergreen-weeklyrewards-category-world", Enum.WeeklyRewardChestThresholdType.World);
+	-- self:SetUpActivity(self.WorldFrame, WORLD, "evergreen-weeklyrewards-category-world", Enum.WeeklyRewardChestThresholdType.World);
+	-- self:SetUpConditionalActivities();
 
 	local attributes =
 	{
@@ -506,6 +514,10 @@ function ReVaultActivityMixin:HidePreviewItemTooltip()
     if not (self.info or self.info.rewards.itemLink) then return end
 
 	local equippedItems = self.info and self.info.rewards.equippedItems;
+	if not equippedItems then 
+		return 
+	end
+	
 	for i, _ in ipairs(equippedItems) do
 		local equippedItemTooltip = _G["ShoppingTooltip"..i]
 		equippedItemTooltip:Hide();
