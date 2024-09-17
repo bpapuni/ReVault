@@ -111,6 +111,7 @@ local function GetEquippedItemsForSlot(itemLink)
 			["INVTYPE_NECK"] = "NECKSLOT",
 			["INVTYPE_SHOULDER"] = "SHOULDERSLOT",
 			["INVTYPE_CHEST"] = "CHESTSLOT",
+			["INVTYPE_CLOAK"] = "BACKSLOT",
 			["INVTYPE_WAIST"] = "WAISTSLOT",
 			["INVTYPE_LEGS"] = "LEGSSLOT",
 			["INVTYPE_FEET"] = "FEETSLOT",

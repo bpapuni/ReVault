@@ -460,8 +460,10 @@ local function AddItemComparison(tooltip, rewardItemLink, equippedItemLink)
 	if not equippedItemStats then return end
     local statDifference = {}
     for _, stat in ipairs(statOrder) do
-        local statString = string.format("%.1f", rewardItemStats[stat] - equippedItemStats[stat]);
-        statDifference[stat] = tonumber(statString);
+		if rewardItemStats then
+			local statString = string.format("%.1f", rewardItemStats[stat] - equippedItemStats[stat]);
+			statDifference[stat] = tonumber(statString);
+		end
     end
     
     tooltip:AddLine("\nIf ".. charName .. " replaces this item, the following stat changes will occur:\n", 1, 0.87, 0, true)
