@@ -59,27 +59,21 @@ local SELECTION_STATE_SELECTED = 3;
 
 ReVaultMixin = { };
 
-function ReVaultMixin:SetUpConditionalActivities()
-	self.showWorldRow = true;
-	-- local activities = C_WeeklyRewards.GetActivities();
-	-- for i, activityInfo in ipairs(activities) do
-	-- 	if activityInfo.type == Enum.WeeklyRewardChestThresholdType.World then
-	-- 		self.showWorldRow = true;
-	-- 		break;
-	-- 	end
-	-- end
-
-	-- self.showPVPRow = not self.showWorldRow;
-
-	-- self:SetActivityShown(self.showPVPRow, self.PVPFrame, Enum.WeeklyRewardChestThresholdType.RankedPvP);
-	-- if self.showPVPRow then
-	-- 	self:SetUpActivity(self.PVPFrame, PVP, "evergreen-weeklyrewards-category-pvp", Enum.WeeklyRewardChestThresholdType.RankedPvP);
-	-- end
-
-	self:SetActivityShown(self.showWorldRow, self.WorldFrame, Enum.WeeklyRewardChestThresholdType.World);
-	if self.showWorldRow then
-		self:SetUpActivity(self.WorldFrame, WORLD, "evergreen-weeklyrewards-category-world", Enum.WeeklyRewardChestThresholdType.World);
+local function ShowRewards(self, showRewards)
+	if showRewards then
+		self.ViewingRewards = true;
+		self.ToggleVaultProgressButton:SetText("Show Progress");
+		self.HeaderFrame.Text:SetText("Viewing "..self.owner.."'s Last Vault");
+	else
+		self.ViewingRewards = false;
+		self.ToggleVaultProgressButton:SetText("Show Rewards");
+		self.HeaderFrame.Text:SetText("Viewing "..self.owner.."'s Current Vault");
 	end
+end
+
+function ReVaultMixin:ToggleVaultProgress()
+	ShowRewards(self, not self.ViewingRewards);
+	self:FullRefresh();
 end
 
 function ReVaultMixin:OnLoad()
@@ -88,6 +82,10 @@ function ReVaultMixin:OnLoad()
     self:RegisterForDrag("LeftButton");
     self:SetScript("OnDragStart", self.StartMoving);
     self:SetScript("OnDragStop", self.StopMovingOrSizing);
+	self.ViewingRewards = false;
+	self.ToggleVaultProgressButton:SetScript("OnClick", function()
+        self:ToggleVaultProgress()
+    end)
 
 	if ReVaultData == nil then
         ReVaultData = {
@@ -103,8 +101,6 @@ function ReVaultMixin:OnLoad()
 	WeeklyRewardsFrame:SetActivityShown(false, WeeklyRewardsFrame.PVPFrame, Enum.WeeklyRewardChestThresholdType.RankedPvP);
 	WeeklyRewardsFrame:SetActivityShown(true, WeeklyRewardsFrame.WorldFrame, Enum.WeeklyRewardChestThresholdType.World);
 	WeeklyRewardsFrame:SetUpActivity(WeeklyRewardsFrame.WorldFrame, WORLD, "evergreen-weeklyrewards-category-world", Enum.WeeklyRewardChestThresholdType.World);
-	-- self:SetUpActivity(self.WorldFrame, WORLD, "evergreen-weeklyrewards-category-world", Enum.WeeklyRewardChestThresholdType.World);
-	-- self:SetUpConditionalActivities();
 
 	local attributes =
 	{
@@ -118,37 +114,41 @@ end
 
 function ReVaultMixin:OnShow()
 	PlaySound(SOUNDKIT.UI_WEEKLY_REWARD_OPEN_WINDOW);
-	local checkCount = 0;
 	local checkForData;
+	local checkCount = 0;
+	local check = true;
 	self.Blackout:SetShown(true);
 	self:GetOrCreateOverlay():Show();
 	
 	checkForData = C_Timer.NewTicker(1, function()
-		if #self.activities > 0 then
-			if self.activities.hasRewards then
-				self.HeaderFrame.Text:SetText("Viewing "..self.owner.."'s Vault");
-				self.Blackout:SetShown(false);
-				self.Overlay:Hide();
-				self:FullRefresh();
-			elseif ReVaultData[self.owner] then
-				self.activities = ReVaultData[self.owner];
-				self.timestamp = date("%a %b %d %H:%M %Y", self.activities.timestamp);
-				self.HeaderFrame.Text:SetText("Viewing "..self.owner.."'s Vault\nCurrent as of "..self.timestamp);
-				self.Blackout:SetShown(false);
-				self.Overlay:Hide();
-				self:FullRefresh();
-			else
-				ReVaultFrame:Hide();
-				UIErrorsFrame:AddMessage("No vault data found for "..self.owner, 1.0, 0.1, 0.1, 1.0);
+		if not check then checkForData:Cancel(); return end
+
+		if self.activities then
+			-- Player is online
+			-- Data has been passed from transmit
+			check = false;
+
+			if self.activities.weeklyRewardsActivities and self.activities.progress then
+				self.ToggleVaultProgressButton:Show();
 			end
-			checkForData:Cancel();
+
+			ShowRewards(self, self.activities.hasRewards);
+			self.Blackout:SetShown(false);
+			self.Overlay:Hide();
+			self:FullRefresh();
 		else
+			-- Player is offline
 			checkCount = checkCount + 1;
 			if (checkCount == 3) then
-				if #ReVaultData[self.owner] > 0 then
-					self.activities = ReVaultData[self.owner];
-					self.timestamp = date("%a %b %d %H:%M %Y", self.activities.timestamp);
-					self.HeaderFrame.Text:SetText("Viewing "..self.owner.."'s Vault\nCurrent as of "..self.timestamp);
+				check = false;
+
+				if ReVaultData[self.owner] then
+					self.activities = ReVaultData[self.owner]
+					if self.activities.weeklyRewardsActivities and self.activities.progress then
+						self.ToggleVaultProgressButton:Show();
+					end
+
+					ShowRewards(self, self.activities.hasRewards);
 					self.Blackout:SetShown(false);
 					self.Overlay:Hide();
 					self:FullRefresh();
@@ -156,7 +156,6 @@ function ReVaultMixin:OnShow()
 					ReVaultFrame:Hide();
 					UIErrorsFrame:AddMessage("No vault data found for "..self.owner, 1.0, 0.1, 0.1, 1.0);
 				end
-				checkForData:Cancel();
 			end
 		end
 	end, 3)
@@ -165,7 +164,10 @@ end
 function ReVaultMixin:OnHide()
 	PlaySound(SOUNDKIT.UI_WEEKLY_REWARD_CLOSE_WINDOW);
 	self.activities = nil;
+	self.ViewingRewards = false;
+	self.ToggleVaultProgressButton:SetText("Show Rewards");
 	self.selectedActivity = nil;
+	self.ToggleVaultProgressButton:Hide();
 end
 
 function ReVaultMixin:SetUpActivity(activityTypeFrame, name, atlas, activityType)
@@ -219,7 +221,7 @@ function ReVaultMixin:FullRefresh()
 end
 
 function ReVaultMixin:Refresh(playSheenAnims)
-	local activities = self.activities or C_WeeklyRewards.GetActivities();
+	local activities = (((self.activities.hasRewards and self.ViewingRewards) and self.activities.weeklyRewardsActivities) or ((not self.activities.hasRewards and self.ViewingRewards) and self.activities.weeklyRewardsActivities) or self.activities.progress or {}) or C_WeeklyRewards.GetActivities();
 	self.ConcessionFrame:Hide();
 	self:UpdateSelection();
 
@@ -233,7 +235,6 @@ function ReVaultMixin:Refresh(playSheenAnims)
 	end
 	
 	self:SetHeight(657);
-	self.activities = nil;
 end
 
 function ReVaultMixin:GetOrCreateOverlay()
@@ -302,6 +303,7 @@ end
 
 local GENERATED_REWARD_MODEL_SCENE_EFFECT = { effectID = 179, offsetX = -35, offsetY = -15};
 local GENERATED_REWARD_MODEL_SCENE_EFFECT_DECAY = { effectID = 180, offsetX = -36, offsetY = -5};
+
 function ReVaultActivityMixin:Refresh(activityInfo)
 	local thresholdString;
 	if activityInfo.type == Enum.WeeklyRewardChestThresholdType.Raid then
@@ -315,18 +317,17 @@ function ReVaultActivityMixin:Refresh(activityInfo)
 	end
 
 	self.Threshold:SetFormattedText(thresholdString, activityInfo.threshold);
-	if (not self:GetParent().activities) then
-		self.unlocked = false;
-		self.hasRewards = false
+	if (not self:GetParent().ViewingRewards) then
+		self.unlocked = activityInfo.progress >= activityInfo.threshold;
+		self.hasRewards = #activityInfo.rewards > 0;
 		self.info = activityInfo;
+		self:SetProgressText();
 	else
-		-- self.unlocked = activityInfo.progress >= activityInfo.threshold;
 		self.unlocked = activityInfo.rewards.itemLink;
 		self.hasRewards = activityInfo.rewards.itemLink
 		self.info = activityInfo;
+		self:SetProgressText("");
 	end
-
-	self:SetProgressText();
 
 	local useAtlasSize = true;
 
@@ -397,13 +398,33 @@ function ReVaultActivityMixin:ClearActiveEffect()
 	self:SetActiveEffect(nil);
 end
 
+function ReVaultActivityMixin:IsCompletedAtHeroicLevel()
+	local difficultyID = C_WeeklyRewards.GetDifficultyIDForActivityTier(self.info.activityTierID);
+	return difficultyID == DifficultyUtil.ID.DungeonHeroic;
+end
+
 function ReVaultActivityMixin:SetProgressText(text)
 	local activityInfo = self.info;
+	DevTool:AddData(self:GetParent().activities, 1)
+	DevTool:AddData(activityInfo, 2)
 	if text then
 		self.Progress:SetText(text);
+	elseif not self:GetParent().ViewingRewards and self.unlocked then
+		if activityInfo.type == Enum.WeeklyRewardChestThresholdType.Raid then
+			local name = DifficultyUtil.GetDifficultyName(activityInfo.level);
+			self.Progress:SetText(name);
+		elseif activityInfo.type == Enum.WeeklyRewardChestThresholdType.Activities then
+			if self:IsCompletedAtHeroicLevel() then
+				self.Progress:SetText(WEEKLY_REWARDS_HEROIC);
+			else
+				self.Progress:SetFormattedText(WEEKLY_REWARDS_MYTHIC, activityInfo.level);
+			end
+		elseif activityInfo.type == Enum.WeeklyRewardChestThresholdType.World then
+			self.Progress:SetText(GREAT_VAULT_WORLD_TIER:format(activityInfo.level));
+		end
 	else
-		-- self.Progress:SetFormattedText(GENERIC_FRACTION_STRING, activityInfo.progress, activityInfo.threshold);
-		self.Progress:SetText("");
+		self.Progress:SetFormattedText(GENERIC_FRACTION_STRING, activityInfo.progress, activityInfo.threshold);
+		-- self.Progress:SetText("");
 	end
 end
 

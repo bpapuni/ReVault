@@ -117,7 +117,12 @@
         "ContinuableContainer",
         "Item",
         "WHITE_FONT_COLOR",
-        "UIErrorsFrame"
+        "UIErrorsFrame",
+        "SecureHandlerExecute",
+        "SecureHandlerWrapScript",
+        "CallErrorHandler",
+        "WeeklyRewardsActivityMixin",
+        "GREAT_VAULT_WORLD_TIER"
     ],
     "Lua.runtime.version": "Lua 5.1",
     "Lua.runtime.builtin": {

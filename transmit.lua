@@ -128,6 +128,7 @@ local function GetEquippedItemsForSlot(itemLink)
 end
 
 local function GetRewards()
+	local data = {};
 	local weeklyRewardsActivities = C_WeeklyRewards.GetActivities();
 	local hasRewards = C_WeeklyRewards.HasGeneratedRewards();
 
@@ -148,12 +149,14 @@ local function GetRewards()
 			else
 				activity.rewards =  {}
 			end
-		end		
+		end
+		data["weeklyRewardsActivities"] = weeklyRewardsActivities;
+	else
+		data["progress"] = weeklyRewardsActivities
 	end
 
-	weeklyRewardsActivities["timestamp"] = time();
-	weeklyRewardsActivities["hasRewards"] = hasRewards;
-	return weeklyRewardsActivities;
+	data["hasRewards"] = hasRewards;
+	return data;
 end
 
 Comm:RegisterComm("ReVault", function(prefix, message, chattype, sender)
@@ -161,7 +164,6 @@ Comm:RegisterComm("ReVault", function(prefix, message, chattype, sender)
 	local _, _, response = message:find("response:([^%s]+)");
 	if request then
 		local rewards = GetRewards();
-		local yourName, realm = UnitFullName("player");
 		local serialized = LibSerialize:SerializeEx(configForLS, rewards);
 		local compressed = LibDeflate:CompressDeflate(serialized, configForDeflate);
 		local encoded = LibDeflate:EncodeForPrint(compressed);
@@ -171,8 +173,41 @@ Comm:RegisterComm("ReVault", function(prefix, message, chattype, sender)
 		local decompressed = LibDeflate:DecompressDeflate(decoded)
 		local success, deserialized = LibSerialize:Deserialize(decompressed)
 
-		ReVaultFrame.activities = deserialized;
-		ReVaultData[ReVaultFrame.owner] = deserialized;
+		if not deserialized.weeklyRewardsActivities and not deserialized.progress then
+			-- Backwards compatability
+			local hasRewards = deserialized.hasRewards
+			deserialized.hasRewards = nil;
+			deserialized.timestamp = nil;
+
+			ReVaultData[ReVaultFrame.owner] = {}
+			ReVaultData[ReVaultFrame.owner].hasRewards = nil;
+
+			if hasRewards then
+				ReVaultData[ReVaultFrame.owner].weeklyRewardsActivities = deserialized;
+				ReVaultData[ReVaultFrame.owner].progress = nil;
+				ReVaultData[ReVaultFrame.owner].hasRewards = true;
+			else
+				ReVaultData[ReVaultFrame.owner].weeklyRewardsActivities = nil;
+				ReVaultData[ReVaultFrame.owner].progress = deserialized;
+				ReVaultData[ReVaultFrame.owner].hasRewards = false;		
+			end
+
+			ReVaultFrame.activities = ReVaultData[ReVaultFrame.owner];
+		else
+			local cachedRewards = ReVaultData[ReVaultFrame.owner] and ReVaultData[ReVaultFrame.owner].weeklyRewardsActivities;
+			ReVaultData[ReVaultFrame.owner] = {}
+			ReVaultFrame.activities = deserialized;
+
+			if ReVaultData[ReVaultFrame.owner].hasRewards then
+				ReVaultData[ReVaultFrame.owner].weeklyRewardsActivities = deserialized.weeklyRewardsActivities;
+				ReVaultData[ReVaultFrame.owner].progress = nil;
+				ReVaultData[ReVaultFrame.owner].hasRewards = true;
+			else
+				ReVaultData[ReVaultFrame.owner].weeklyRewardsActivities = cachedRewards;
+				ReVaultData[ReVaultFrame.owner].progress = deserialized.progress;
+				ReVaultData[ReVaultFrame.owner].hasRewards = false;
+			end
+		end
 	end
 end)
 
