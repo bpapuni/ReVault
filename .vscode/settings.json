@@ -122,7 +122,8 @@
         "SecureHandlerWrapScript",
         "CallErrorHandler",
         "WeeklyRewardsActivityMixin",
-        "GREAT_VAULT_WORLD_TIER"
+        "GREAT_VAULT_WORLD_TIER",
+        "INVTYPE_2HWEAPON"
     ],
     "Lua.runtime.version": "Lua 5.1",
     "Lua.runtime.builtin": {

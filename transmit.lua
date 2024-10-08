@@ -103,6 +103,8 @@ local function GetEquippedItemsForSlot(itemLink)
     elseif equipSlot == "INVTYPE_WEAPON" or equipSlot == "INVTYPE_WEAPONMAINHAND" then
         AddItemFromSlot(16);
         AddItemFromSlot(17);
+	elseif equipSlot == "INVTYPE_2HWEAPON" then
+		AddItemFromSlot(16);
     elseif equipSlot == "INVTYPE_SHIELD" or equipSlot == "INVTYPE_WEAPONOFFHAND" or equipSlot == "INVTYPE_HOLDABLE" then
         AddItemFromSlot(17);
     else
